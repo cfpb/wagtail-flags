@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.forms import modelformset_factory
 from django.shortcuts import get_object_or_404
@@ -39,6 +40,8 @@ def create(request):
 
 
 def index(request, site_id):
+    settings_flags = getattr(settings, 'FLAGS', {})
+
     sites = Site.objects.all()
     selected_site = Site.objects.get(pk=site_id)
 
@@ -57,6 +60,7 @@ def index(request, site_id):
         'selected_site': selected_site,
         'sites': sites,
         'flagforms': flagstate_forms,
+        'settings_flags': settings_flags,
     }
 
     return render(request, 'flagadmin/index.html', context)

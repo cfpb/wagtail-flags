@@ -4,7 +4,7 @@ except ImportError:
     from mock import Mock, patch
 
 from django.http import HttpRequest
-from django.test import TestCase
+from django.test import TestCase, override_settings
 
 from wagtail.wagtailcore.models import Site
 
@@ -46,9 +46,28 @@ class FlagEnabledTestCase(TestCase):
             is_default_site=False,
             root_page_id=self.site.root_page_id
         )
-
         FlagState.objects.create(flag=flag, site=other_site, enabled=True)
         self.assertFalse(flag_enabled(self.request, self.flag_name))
+
+    @override_settings(FLAGS={'FLAG_ENABLED_TEST_CASE':True})
+    def test_flag_enabled_settings(self):
+        self.assertTrue(flag_enabled(self.request, self.flag_name))
+
+    @override_settings(FLAGS={'FLAG_ENABLED_TEST_CASE':False})
+    def test_flag_disabled_settings(self):
+        self.assertFalse(flag_enabled(self.request, self.flag_name))
+
+    @override_settings(FLAGS={'FLAG_ENABLED_TEST_CASE':False})
+    def test_flag_disabled_settings_enabled_db(self):
+        flag = Flag.objects.create(key=self.flag_name)
+        FlagState.objects.create(flag=flag, site=self.site, enabled=True)
+        self.assertFalse(flag_enabled(self.request, self.flag_name))
+
+    @override_settings(FLAGS={'FLAG_ENABLED_TEST_CASE':True})
+    def test_flag_enabled_settings_enabled_db(self):
+        flag = Flag.objects.create(key=self.flag_name)
+        FlagState.objects.create(flag=flag, site=self.site, enabled=False)
+        self.assertTrue(flag_enabled(self.request, self.flag_name))
 
 
 class FlagDisabledTestCase(TestCase):

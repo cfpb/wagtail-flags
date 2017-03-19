@@ -9,88 +9,93 @@
 
     {% include "wagtailadmin/shared/header.html" with title=flags_str icon="tag" %}
 
-<!--
-    <h2 class="nice-padding"> Editing flags for {{selected_site.hostname}}:{{selected_site.port}}</h2>
-    <form class="nice-padding" method="POST" action="{% url 'flagadmin:select_site' %}">
-        {% csrf_token %}
-        <label for="id_select_site">Switch to:</label>
-        <ul class="fields">
-            <li class="actions">
-              <div class="field typed_choice_field select">
-                <div class="field-content input">
-                      <select name="site_id" id="id_select_site">
-                          {% for site in sites %}
-                          <option value="{{site.pk}}"
-                          {% if site == selected_site %} selected {% endif %}
-                          >{{site.hostname}}:{{site.port}}</option>
-                          {% endfor %}
-                      </select>
-                      <span></span>
-                </div>
-              </div>
-            </li>
-            <li class="actions">
-                <input class="button action-save button-longrunning" type="submit" value="Switch"/>
-            </li>
-        </ul>
-    </form>
-    <hr/>
-  -->
-    <h2 class="nice-padding"> Set flags for
-      <div class="c-dropdown u-para t-default" data-dropdown="" style="display:inline-block">
-            <a class="c-dropdown__button  u-btn-current">
-                {{selected_site.hostname}}:{{selected_site.port}}
-                <div data-dropdown-toggle="" class="o-icon  c-dropdown__toggle  [ icon icon-arrow-down ]"></div>
-            </a>
-            <div class="t-dark">
-                <ul role="menu" class="c-dropdown__menu  u-toggle  u-arrow u-arrow--tl u-background">
-                    {% for site in sites %}
-                            <li class="c-dropdown__item ">
-                                <a href="{% url 'flagadmin:list' site.pk %}" class="u-link is-live ">
-                                  {% if selected_site != site %}
-                                    <span class="icon icon-success" style="opacity:0;"></span>
-                                    {% else %}
-                                    <span class="icon icon-success"></span>
-                                    {% endif %}
-                                    {{site.hostname}}:{{site.port}}
-                                </a>
-                            </li>
-
-                    {% endfor %}
-                </ul>
-            </div>
+    <div class="nice-padding">
+        <h2>Global flags</h2>
+        <div class="help-block help-info">
+            <p>Global flags are defined in the server settings and cannot be changed. Global flags will override any site-specific flag of the same name.</p>
         </div>
-    </h2>
 
-    <form class="nice-padding" method="POST" action="{% url 'flagadmin:save' selected_site.pk  %}">
-      {{ flagforms.management_form }}
-      {% csrf_token %}
-
-      <table class="listing">
+        <table class="listing">
             <thead>
                 <tr>
                     <th>Enabled</th>
                     <th>Name</th>
-                    <th>Delete?</th>
                 </tr>
             </thead>
             <tbody>
-                {% for form in flagforms %}
+                {% for flag, value in settings_flags.items %}
                 <tr>
                     <td style="width: 10px; text-align: center;">
-                        {{ form.enabled }}
+                        {% if value %}
+                        <input checked="checked"  type="checkbox" disabled="disabled">
+                        {% else %}
+                        <input type="checkbox" disabled="disabled">
+                        {% endif %}
                     </td>
-                    <td><input value="{{ form.instance.flag_id }}" /></td>
-                    <td>
-                      <a  href="{% url 'flagadmin:delete' form.instance.flag_id %}" class="button icon text-replace hover-no icon-bin">Delete</a>
-                      {% for hidden in form.hidden_fields %} {{ hidden }} {% endfor %}
-                    </td>
+                    <td>{{ flag }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
 
-        <input class="button action-save button-longrunning" type="submit" value="Save Flags" />
-        <a href="{% url 'flagadmin:create' %}" class="button bicolor icon icon-plus">Add a flag</a>
-    </form>
+        <h2>Flags for
+          <div class="c-dropdown u-para t-default" data-dropdown="" style="display:inline-block">
+                <a class="c-dropdown__button  u-btn-current">
+                    {{selected_site.hostname}}:{{selected_site.port}}
+                    <div data-dropdown-toggle="" class="o-icon  c-dropdown__toggle  [ icon icon-arrow-down ]"></div>
+                </a>
+                <div class="t-dark">
+                    <ul role="menu" class="c-dropdown__menu  u-toggle  u-arrow u-arrow--tl u-background">
+                        {% for site in sites %}
+                                <li class="c-dropdown__item ">
+                                    <a href="{% url 'flagadmin:list' site.pk %}" class="u-link is-live ">
+                                      {% if selected_site != site %}
+                                        <span class="icon icon-success" style="opacity:0;"></span>
+                                        {% else %}
+                                        <span class="icon icon-success"></span>
+                                        {% endif %}
+                                        {{site.hostname}}:{{site.port}}
+                                    </a>
+                                </li>
+
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </h2>
+
+        <form method="POST" action="{% url 'flagadmin:save' selected_site.pk  %}">
+          {{ flagforms.management_form }}
+          {% csrf_token %}
+
+          <table class="listing">
+                <thead>
+                    <tr>
+                        <th>Enabled</th>
+                        <th>Name</th>
+                        <th>Delete?</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for form in flagforms %}
+                    <tr>
+                        <td style="width: 10px; text-align: center;">
+                            {{ form.enabled }}
+                        </td>
+                        <td>{{ form.instance.flag_id }}</td>
+                        <td>
+                          <a  href="{% url 'flagadmin:delete' form.instance.flag_id %}" class="button icon text-replace hover-no icon-bin">Delete</a>
+                          {% for hidden in form.hidden_fields %} {{ hidden }} {% endfor %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            <input class="button action-save button-longrunning" type="submit" value="Save Flags" />
+            <a href="{% url 'flagadmin:create' %}" class="button bicolor icon icon-plus">Add a flag</a>
+        </form>
+
+    </div>
+
 {% endblock %}
