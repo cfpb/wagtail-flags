@@ -49,21 +49,21 @@ class FlagEnabledTestCase(TestCase):
         FlagState.objects.create(flag=flag, site=other_site, enabled=True)
         self.assertFalse(flag_enabled(self.request, self.flag_name))
 
-    @override_settings(FLAGS={'FLAG_ENABLED_TEST_CASE':True})
+    @override_settings(FLAGS={'FLAG_ENABLED_TEST_CASE': True})
     def test_flag_enabled_settings(self):
         self.assertTrue(flag_enabled(self.request, self.flag_name))
 
-    @override_settings(FLAGS={'FLAG_ENABLED_TEST_CASE':False})
+    @override_settings(FLAGS={'FLAG_ENABLED_TEST_CASE': False})
     def test_flag_disabled_settings(self):
         self.assertFalse(flag_enabled(self.request, self.flag_name))
 
-    @override_settings(FLAGS={'FLAG_ENABLED_TEST_CASE':False})
+    @override_settings(FLAGS={'FLAG_ENABLED_TEST_CASE': False})
     def test_flag_disabled_settings_enabled_db(self):
         flag = Flag.objects.create(key=self.flag_name)
         FlagState.objects.create(flag=flag, site=self.site, enabled=True)
         self.assertFalse(flag_enabled(self.request, self.flag_name))
 
-    @override_settings(FLAGS={'FLAG_ENABLED_TEST_CASE':True})
+    @override_settings(FLAGS={'FLAG_ENABLED_TEST_CASE': True})
     def test_flag_enabled_settings_enabled_db(self):
         flag = Flag.objects.create(key=self.flag_name)
         FlagState.objects.create(flag=flag, site=self.site, enabled=False)

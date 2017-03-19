@@ -10,6 +10,8 @@
     {% include "wagtailadmin/shared/header.html" with title=flags_str icon="tag" %}
 
     <div class="nice-padding">
+
+        {% if settings_flags|length > 0 %}
         <h2>Global flags</h2>
         <div class="help-block help-info">
             <p>Global flags are defined in the server settings and cannot be changed. Global flags will override any site-specific flag of the same name.</p>
@@ -37,6 +39,7 @@
                 {% endfor %}
             </tbody>
         </table>
+        {% endif %}
 
         <h2>Flags for
           <div class="c-dropdown u-para t-default" data-dropdown="" style="display:inline-block">
@@ -57,44 +60,47 @@
                                         {{site.hostname}}:{{site.port}}
                                     </a>
                                 </li>
-
                         {% endfor %}
                     </ul>
                 </div>
             </div>
         </h2>
 
-        <form method="POST" action="{% url 'flagadmin:save' selected_site.pk  %}">
-          {{ flagforms.management_form }}
-          {% csrf_token %}
+        {% if flagforms|length > 0 %}
+            <form method="POST" action="{% url 'flagadmin:save' selected_site.pk  %}">
+              {{ flagforms.management_form }}
+              {% csrf_token %}
 
-          <table class="listing">
-                <thead>
-                    <tr>
-                        <th>Enabled</th>
-                        <th>Name</th>
-                        <th>Delete?</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for form in flagforms %}
-                    <tr>
-                        <td style="width: 10px; text-align: center;">
-                            {{ form.enabled }}
-                        </td>
-                        <td>{{ form.instance.flag_id }}</td>
-                        <td>
-                          <a  href="{% url 'flagadmin:delete' form.instance.flag_id %}" class="button icon text-replace hover-no icon-bin">Delete</a>
-                          {% for hidden in form.hidden_fields %} {{ hidden }} {% endfor %}
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+              <table class="listing">
+                    <thead>
+                        <tr>
+                            <th>Enabled</th>
+                            <th>Name</th>
+                            <th>Delete?</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for form in flagforms %}
+                        <tr>
+                            <td style="width: 10px; text-align: center;">
+                                {{ form.enabled }}
+                            </td>
+                            <td>{{ form.instance.flag_id }}</td>
+                            <td>
+                              <a  href="{% url 'flagadmin:delete' form.instance.flag_id %}" class="button icon text-replace hover-no icon-bin">Delete</a>
+                              {% for hidden in form.hidden_fields %} {{ hidden }} {% endfor %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
 
-            <input class="button action-save button-longrunning" type="submit" value="Save Flags" />
-            <a href="{% url 'flagadmin:create' %}" class="button bicolor icon icon-plus">Add a flag</a>
-        </form>
+                <input class="button action-save button-longrunning" type="submit" value="Save Flags" />
+                <a href="{% url 'flagadmin:create' %}" class="button bicolor icon icon-plus">Add a flag</a>
+            </form>
+        {% else %}
+          <p>No flags have been created. Why not <a href="{% url 'flagadmin:create' %}">add one</a>?</p>
+        {% endif %}
 
     </div>
 
