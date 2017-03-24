@@ -12,6 +12,33 @@ from flags.models import Flag, FlagState
 from flags.template_functions import flag_disabled, flag_enabled, flags_enabled
 
 
+@override_settings(FLAGS={
+    'GLOBAL_FLAG_ENABLED': True,
+    'GLOBAL_FLAG_DISABLED': False,
+})
+class GlobalFlagsTestCase(TestCase):
+    def setUp(self):
+        self.site = Site.objects.get(is_default_site=True)
+        self.request = HttpRequest()
+        self.request.site = self.site
+
+    def test_flag_enabled_settings(self):
+        self.assertTrue(flag_enabled(self.request, 'GLOBAL_FLAG_ENABLED'))
+
+    def test_flag_disabled_settings(self):
+        self.assertFalse(flag_enabled(self.request, 'GLOBAL_FLAG_DISABLED'))
+
+    def test_flag_disabled_settings_enabled_db(self):
+        flag = Flag.objects.create(key='GLOBAL_FLAG_DISABLED')
+        FlagState.objects.create(flag=flag, site=self.site, enabled=True)
+        self.assertFalse(flag_enabled(self.request, 'GLOBAL_FLAG_DISABLED'))
+
+    def test_flag_enabled_settings_enabled_db(self):
+        flag = Flag.objects.create(key='GLOBAL_FLAG_ENABLED')
+        FlagState.objects.create(flag=flag, site=self.site, enabled=False)
+        self.assertTrue(flag_enabled(self.request, 'GLOBAL_FLAG_ENABLED'))
+
+
 class FlagEnabledTestCase(TestCase):
     def setUp(self):
         self.flag_name = 'FLAG_ENABLED_TEST_CASE'
@@ -48,26 +75,6 @@ class FlagEnabledTestCase(TestCase):
         )
         FlagState.objects.create(flag=flag, site=other_site, enabled=True)
         self.assertFalse(flag_enabled(self.request, self.flag_name))
-
-    @override_settings(FLAGS={'FLAG_ENABLED_TEST_CASE': True})
-    def test_flag_enabled_settings(self):
-        self.assertTrue(flag_enabled(self.request, self.flag_name))
-
-    @override_settings(FLAGS={'FLAG_ENABLED_TEST_CASE': False})
-    def test_flag_disabled_settings(self):
-        self.assertFalse(flag_enabled(self.request, self.flag_name))
-
-    @override_settings(FLAGS={'FLAG_ENABLED_TEST_CASE': False})
-    def test_flag_disabled_settings_enabled_db(self):
-        flag = Flag.objects.create(key=self.flag_name)
-        FlagState.objects.create(flag=flag, site=self.site, enabled=True)
-        self.assertFalse(flag_enabled(self.request, self.flag_name))
-
-    @override_settings(FLAGS={'FLAG_ENABLED_TEST_CASE': True})
-    def test_flag_enabled_settings_enabled_db(self):
-        flag = Flag.objects.create(key=self.flag_name)
-        FlagState.objects.create(flag=flag, site=self.site, enabled=False)
-        self.assertTrue(flag_enabled(self.request, self.flag_name))
 
 
 class FlagDisabledTestCase(TestCase):
