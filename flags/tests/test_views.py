@@ -53,7 +53,8 @@ class FlaggedViewMixinTestCase(TestCase):
 
         view = TestView.as_view(
             flag_name=self.flag_name,
-            fallback_view=test_view_function
+            condition=True,
+            fallback=test_view_function
         )
 
         response = view(self.request())
@@ -70,7 +71,8 @@ class FlaggedViewMixinTestCase(TestCase):
         Flag.objects.create(key=self.flag_name, enabled_by_default=True)
         view = TestView.as_view(
             flag_name=self.flag_name,
-            fallback_view=test_view_function
+            condition=True,
+            fallback=test_view_function
         )
 
         response = view(self.request())
@@ -87,7 +89,8 @@ class FlaggedViewMixinTestCase(TestCase):
 
         view = TestView.as_view(
             flag_name=self.flag_name,
-            fallback_view=OtherTestView.as_view()
+            condition=True,
+            fallback=OtherTestView.as_view()
         )
 
         response = view(self.request())
@@ -107,7 +110,8 @@ class FlaggedViewMixinTestCase(TestCase):
 
         fail_through = lambda request: wagtail_serve(request, request.path)
         view = TestView.as_view(flag_name=self.flag_name,
-                                fallback_view=fail_through)
+                                condition=True,
+                                fallback=fail_through)
 
         response = view(self.request(path='/title'))
         self.assertContains(response, '<title>wagtail title</title>')

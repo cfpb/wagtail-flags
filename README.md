@@ -79,35 +79,27 @@ This will override all `Site`-specific flags by the same name whether `True` or 
 
 ### Using flags
 
-The Wagtail-Flags app provides two basic functions to check the status of feature flags.
+The Wagtail-Flags app provides three basic functions to check the state of feature flags.
 
 - `flag_enabled` will return True if the feature flag is enabled in Django settings or for the Wagtail `Site`.
 
 - `flag_disabled` will return True if the feature flag is disabled in Django settings or for the Wagtail `Site`, or does not exist at all.
 
-It also provides one shortcut for checking the status of multiple flags.
-
-- `flags_enabled` will return True only if all the given flags are enabled.
-
 #### In Python
 
-In Python these functions can be imported from `flags.template_functions` and require a request object as the first argument (the request is used to check the flag's state for the requested Wagtail `Site`).
+In Python these functions can be imported from `flags.state`. Both take the flag name and an optional second argument that is either a Wagtail `Site` object or an `HttpRequest` from which a Wagtail `Site` will be looked-up. If no request or site is given, only global flag state will be checked.
 
 ```python
-from flags.template_functions import (
+from flags.state import (
     flag_enabled,
     flag_disabled,
-    flags_enabled
 )
 
-if flag_enabled(request, 'MY_FLAG'):
+if flag_enabled('MY_FLAG', request):
 	print("My feature flag is enabled")
 
-if flag_disabled(request, 'MY_FLAG'):
+if flag_disabled('MY_FLAG', request):
 	print(“My feature flag is disabled”)
-
-if flags_enabled(request, 'FLAG1', 'FLAG2', 'FLAG3'):
-	print(“All flags were set”)
 ```
 
 #### In Django Views
@@ -129,7 +121,7 @@ def view_with_fallback(request):
     return HttpResponse('flag was set')
 ```
 
-For more complex use a `@flag_check` decorator is provided that can be used to check for a particular value of a flag, with an optional fallback.
+For more complex use cases a `@flag_check` decorator is provided that can be used to check for a particular value of a flag, with an optional fallback.
 
 ```python
 from flags.decorators import flag_check
@@ -184,26 +176,24 @@ In Django templates you'll need to load the `feature_flags` template tag library
 
 #### In Jinja2 templates
 
-The `flag_enabled`, `flag_disabled`, and `flags_enabled` functions can also be added to a Jinja2 environment and subsequently used in templates:
+The `flag_enabled` and `flag_disabled` functions can also be added to a Jinja2 environment and subsequently used in templates. Both require a request or Wagtail `Site` as the second argument.
 
 ```python
 from flags.template_functions import (
     flag_enabled,
-    flag_disabled,
-    flags_enabled
+    flag_disabled
 )
 
 ...
 
 env.globals.update(
     flag_enabled=flag_enabled,
-    flag_disabled=flag_disabled,
-    flags_enabled=flags_enabled
+    flag_disabled=flag_disabled
 )
 ```
 
 ```jinja
-{% if flag_enabled(request, 'MY_FLAG') %}
+{% if flag_enabled('MY_FLAG', request) %}
   <div class="m-global-banner">
     I’m a the result of a feature flag.   
   </div>

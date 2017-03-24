@@ -7,7 +7,7 @@ from django.views.generic import TemplateView
 
 from wagtail.wagtailcore.models import Site
 
-from .decorators import flag_required
+from .decorators import flag_check
 from .forms import FeatureFlagForm, FlagStateForm, SelectSiteForm
 from .models import Flag, FlagState
 from .utils import init_missing_flag_states_for_site
@@ -97,8 +97,8 @@ def delete(request, flag_id):
 
 class FlaggedViewMixin(object):
     flag_name = None
-    fallback_view = None
-    pass_if_set = True
+    fallback = None
+    condition = True
 
     def dispatch(self, request, *args, **kwargs):
         if self.flag_name is None:
@@ -108,10 +108,10 @@ class FlaggedViewMixin(object):
 
         super_dispatch = super(FlaggedViewMixin, self).dispatch
 
-        decorator = flag_required(
+        decorator = flag_check(
             self.flag_name,
-            fallback_view=self.fallback_view,
-            pass_if_set=self.pass_if_set
+            self.condition,
+            fallback=self.fallback,
         )
 
         return decorator(super_dispatch)(request, *args, **kwargs)
