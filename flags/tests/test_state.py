@@ -125,7 +125,7 @@ class FlagStateTestCase(TestCase):
         FlagState.objects.create(flag=flag, site=self.site, enabled=False)
         self.assertTrue(flag_disabled('SITE_FLAG', self.site))
 
-    def test_flag_disabled_global_enabled(self):
+    def test_flag_disabled_request_enabled(self):
         """ flag_disabled should pass the HttpRequest as expected """
         flag = Flag.objects.create(key='SITE_FLAG')
         FlagState.objects.create(flag=flag, site=self.site, enabled=True)

@@ -1,9 +1,9 @@
 from django.http import HttpRequest
-from django.test import TestCase, override_settings
+from django.test import TestCase
 
 from wagtail.wagtailcore.models import Site
 
-from flags.models import Flag, FlagState
+from flags.models import Flag
 from flags.template_functions import flag_disabled, flag_enabled
 
 
