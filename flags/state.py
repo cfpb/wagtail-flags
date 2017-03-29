@@ -4,6 +4,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from wagtail.wagtailcore.models import Site
 
 from flags.models import Flag
+from flags.settings import get_global_flags
 
 
 def flag_state(flag_name, request_or_site=None):
@@ -12,7 +13,7 @@ def flag_state(flag_name, request_or_site=None):
     for a Wagtail site, otherwise only global flags are checked. """
 
     # Check for global flags first.
-    settings_flags = getattr(settings, 'FLAGS', {})
+    settings_flags = get_global_flags()
     if flag_name in settings_flags:
         return settings_flags[flag_name]
 
