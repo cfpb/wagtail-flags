@@ -38,6 +38,7 @@ pip install wagtail-flags
 - [Defining flags](#defining-flags)
   - [Site-specific flags](#site-specific-flags)
   - [Global flags](#global-flags)
+  - [Global flag sources](#global-flag-sources)
 - [Using flags](#using-flags)
   - [In Python](#in-python)
   - [In Django views](#in-django-views)
@@ -76,6 +77,24 @@ FLAGS = {
 ```
 
 This will override all `Site`-specific flags by the same name whether `True` or `False`.
+
+#### Global flag sources
+
+Global flags can also be provided by importable Python modules defined in `FLAG_SOURCES` in your `settings.py` file:
+
+```python
+FLAG_SOURCES = (
+    'my.module'
+)
+```
+
+In my/module.py:
+
+```python
+MY_FLAG = True
+```
+
+*Note:* Global flags defined in `settings.FLAGS` will always override flags in a module defined in `settings.FLAG_SOURCES`.
 
 ### Using flags
 
