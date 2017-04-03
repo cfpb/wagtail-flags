@@ -10,6 +10,10 @@ class FlagTestCase(TestCase):
         flag = Flag.objects.create(key='FOO')
         self.assertFalse(flag.enabled_by_default)
 
+    def test_flag_str(self):
+        flag = Flag.objects.create(key='FOO')
+        self.assertEqual(str(flag), 'FOO')
+
 
 class FlagStateTestCase(TestCase):
     def setUp(self):

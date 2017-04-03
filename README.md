@@ -5,7 +5,7 @@
 
 Feature flags allow you to toggle functionality without multiple deployments. Wagtail-Flags lets you use feature flags that are set in the Wagtail admin.
 
-![Feature flags in the Wagtail admin](screenshot.png)
+![Feature flags in the Wagtail admin](screenshot_list.png)
 
 
 ## Dependencies
@@ -33,42 +33,95 @@ pip install wagtail-flags
  )
 ```
 
-
 ## Usage
 
-Feature flags in Wagtail-Flags are stored in the database, exposed to Wagtail users through the Wagtail admin, and their state is associated with a [Wagtail Site](http://docs.wagtail.io/en/stable/reference/pages/model_reference.html#site).
+- [Defining flags](#defining-flags)
+  - [Site-specific flags](#site-specific-flags)
+  - [Global flags](#global-flags)
+  - [Global flag sources](#global-flag-sources)
+- [Using flags](#using-flags)
+  - [In Python](#in-python)
+  - [In Django views](#in-django-views)
+  - [In `urls.py`](#in-urlspy)
+  - [In Django templates](#in-django-templates)
+  - [In Jinja2 templates](#in-jinja2-templates)
 
-### Basic usage
 
-The Wagtail-Flags app provides two basic functions to check the status of feature flags, and one shortcut for checking the status of multiple flags.
+There are two kinds of feature flags in Wagtail-Flags.
 
-- `flag_enabled` will return True if the feature flag is enabled.
+1. Flags that are specific to a [Wagtail `Site`](http://docs.wagtail.io/en/stable/reference/pages/model_reference.html#site), stored in the database, and enabled or disabled in the Wagtail or Django admin.
+2. Global flags that are specified in Django settings, not specific to a [Wagtail `Site`](http://docs.wagtail.io/en/stable/reference/pages/model_reference.html#site) and only enabled or disabled by changing the Django settings.
 
-- `flag_disabled` will return True if the feature flag is disabled or does not exist.
+Global flags will override any Wagtail `Site`-specific flag and will not be editable in the admin.
 
-- `flags_enabled` will return True only if all the given flags are enabled.
+### Defining flags
 
+#### Site-specific flags
 
-### In Python
+To define Wagtail `Site`-specific feature flags, go to "Settings", then "Flags" in the Wagtail admin.
 
-In Python these functions can be imported from `flags.template_functions` and require a request object as the first argument (the request is used to check the flag's state for the requested Wagtail Site).
+![Feature flag listing](screenshot_list.png)
+
+From here you can click on the "Add a flag" button to add a feature flag or select a Wagtail `Site` from the "Flags for" dropdown list and then enable or disable flags by clicking the checkboxes.
+
+![Create a feature flag](screenshot_create.png)
+
+#### Global flags
+
+To define global feature flags in Django settings add a `FLAGS` dictionary to your `settings.py` file:
 
 ```python
-from flags.template_functions import (
+FLAGS = {
+    'MY_FLAG': True,
+}
+```
+
+This will override all `Site`-specific flags by the same name whether `True` or `False`.
+
+#### Global flag sources
+
+Global flags can also be provided by importable Python modules defined in `FLAG_SOURCES` in your `settings.py` file:
+
+```python
+FLAG_SOURCES = (
+    'my.module',
+)
+```
+
+In my/module.py:
+
+```python
+MY_FLAG = True
+```
+
+*Note:* Global flags defined in `settings.FLAGS` will always override flags in a module defined in `settings.FLAG_SOURCES`.
+
+### Using flags
+
+The Wagtail-Flags app provides three basic functions to check the state of feature flags.
+
+- `flag_enabled` will return True if the feature flag is enabled in Django settings or for the Wagtail `Site`.
+
+- `flag_disabled` will return True if the feature flag is disabled in Django settings or for the Wagtail `Site`, or does not exist at all.
+
+#### In Python
+
+In Python these functions can be imported from `flags.state`. Both take the flag name and an optional second argument that is either a Wagtail `Site` object or an `HttpRequest` from which a Wagtail `Site` will be looked-up. If no request or site is given, only global flag state will be checked.
+
+```python
+from flags.state import (
     flag_enabled,
     flag_disabled,
-    flags_enabled
 )
 
-if flag_enabled(request, 'BETA_NOTICE'):
-	print(“Beta notice banner will be displayed”)
+if flag_enabled('MY_FLAG', request):
+	print("My feature flag is enabled")
 
-if flag_disabled(request, 'BETA_NOTICE'):
-	print(“Beta notice banner will not be displayed”)
-
-if flags_enabled(request, 'FLAG1', 'FLAG2', 'FLAG3'):
-	print(“All flags were set”)
+if flag_disabled('MY_FLAG', request):
+	print(“My feature flag is disabled”)
 ```
+
+#### In Django Views
 
 A `@flag_required` decorator is provided to require a particular flag for a Django view. The default behavior is to return a 404 if the flag is not set, but an optional fallback view function can be specified instead.
 
@@ -87,7 +140,7 @@ def view_with_fallback(request):
     return HttpResponse('flag was set')
 ```
 
-For more complex use a `@flag_check` decorator is provided that can be used to check for a particular value of a flag, with an optional fallback.
+For more complex use cases a `@flag_check` decorator is provided that can be used to check for a particular value of a flag, with an optional fallback.
 
 ```python
 from flags.decorators import flag_check
@@ -110,6 +163,8 @@ def view_with_fallback(request):
 
 **Note**, because flags that do not exist are taken to be `False` by default, `@flag_check('MY_FLAG', False)` and `@flag_check('MY_FLAG', None)` will both succeed if `MY_FLAG` does not exist.
 
+#### In `urls.py`
+
 For URL handling, there is `flagged_url()` which can be used in place of Django's `url()`. **Note**, it will not work for `include()` url.
 
 ```python
@@ -123,45 +178,43 @@ urlpatterns = [
 
 ```
 
-### In Django templates
+#### In Django templates
 
 In Django templates you'll need to load the `feature_flags` template tag library. You can then use `flag_enabled`, `flag_disabled`, and `flags_enabled` tags:
 
 ```django
 {% load feature_flags %}
-{% flag_enabled 'BETA_NOTICE' as beta_flag %}
-{% if beta_flag %}
+{% flag_enabled 'MY_FLAG' as my_flag %}
+{% if my_flag %}
   <div class="m-global-banner">
-    I’m a beta banner.   
+    I’m the result of a feature flag.   
   </div>
 {% endif %}
 ```
 
 
-### In Jinja2 templates
+#### In Jinja2 templates
 
-The `flag_enabled`, `flag_disabled`, and `flags_enabled` functions can also be added to a Jinja2 environment and subsequently used in templates:
+The `flag_enabled` and `flag_disabled` functions can also be added to a Jinja2 environment and subsequently used in templates. Both require a request or Wagtail `Site` as the second argument.
 
 ```python
 from flags.template_functions import (
     flag_enabled,
-    flag_disabled,
-    flags_enabled
+    flag_disabled
 )
 
 ...
 
 env.globals.update(
     flag_enabled=flag_enabled,
-    flag_disabled=flag_disabled,
-    flags_enabled=flags_enabled
+    flag_disabled=flag_disabled
 )
 ```
 
 ```jinja
-{% if flag_enabled(request, 'BETA_NOTICE') %}
+{% if flag_enabled('MY_FLAG', request) %}
   <div class="m-global-banner">
-    I’m a beta banner.   
+    I’m the result of a feature flag.   
   </div>
 {% endif %}
 ```

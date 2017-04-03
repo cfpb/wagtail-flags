@@ -6,7 +6,7 @@ except ImportError:
 from django.http import Http404, HttpRequest, HttpResponse
 from django.test import TestCase
 
-from flags.decorators import flag_check
+from flags.decorators import flag_check, flag_required
 from flags.models import Flag
 
 
@@ -107,3 +107,16 @@ class FlagCheckTestCase(TestCase):
         else:
             content = bytes.decode(response.content)
         self.assertEqual(content, 'fallback')
+
+    def test_flag_required(self):
+        def view(request):
+            return HttpResponse('ok')
+
+        Flag.objects.create(key=self.flag_name, enabled_by_default=True)
+        decorated = flag_required(self.flag_name)(view)
+        response = decorated(self.request)
+        if isinstance(response.content, str):
+            content = response.content
+        else:
+            content = bytes.decode(response.content)
+        self.assertEqual(content, 'ok')
