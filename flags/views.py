@@ -7,10 +7,11 @@ from django.views.generic import TemplateView
 
 from wagtail.wagtailcore.models import Site
 
-from .decorators import flag_check
-from .forms import FeatureFlagForm, FlagStateForm, SelectSiteForm
-from .models import Flag, FlagState
-from .utils import init_missing_flag_states_for_site
+from flags.decorators import flag_check
+from flags.forms import FeatureFlagForm, FlagStateForm, SelectSiteForm
+from flags.models import Flag, FlagState
+from flags.utils import init_missing_flag_states_for_site
+from flags.settings import get_global_flags
 
 
 def select_site(request):
@@ -40,7 +41,7 @@ def create(request):
 
 
 def index(request, site_id):
-    settings_flags = getattr(settings, 'FLAGS', {})
+    settings_flags = get_global_flags()
 
     sites = Site.objects.all()
     selected_site = Site.objects.get(pk=site_id)
