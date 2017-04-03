@@ -1,7 +1,8 @@
 import logging
 
+from importlib import import_module
+
 from django.conf import settings
-from django.utils.module_loading import import_string
 
 logger = logging.getLogger(__name__)
 
@@ -20,7 +21,7 @@ def add_flags_from_sources(sources=None):
         sources = getattr(settings, 'FLAG_SOURCES', ())
 
     for source_str in sources:
-        source = import_string(source_str)
+        source = import_module(source_str)
         for flag in (f for f in dir(source)
                      if f.isupper() and isinstance(getattr(source, f), bool)):
             SOURCED_FLAGS[flag] = getattr(source, flag)
