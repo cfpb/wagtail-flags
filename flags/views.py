@@ -1,4 +1,3 @@
-from django.conf import settings
 from django.core.exceptions import ImproperlyConfigured
 from django.forms import modelformset_factory
 from django.shortcuts import get_object_or_404
