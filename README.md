@@ -84,7 +84,7 @@ Global flags can also be provided by importable Python modules defined in `FLAG_
 
 ```python
 FLAG_SOURCES = (
-    'my.module'
+    'my.module',
 )
 ```
 
@@ -187,7 +187,7 @@ In Django templates you'll need to load the `feature_flags` template tag library
 {% flag_enabled 'MY_FLAG' as my_flag %}
 {% if my_flag %}
   <div class="m-global-banner">
-    I’m a the result of a feature flag.   
+    I’m the result of a feature flag.   
   </div>
 {% endif %}
 ```
@@ -214,7 +214,7 @@ env.globals.update(
 ```jinja
 {% if flag_enabled('MY_FLAG', request) %}
   <div class="m-global-banner">
-    I’m a the result of a feature flag.   
+    I’m the result of a feature flag.   
   </div>
 {% endif %}
 ```
