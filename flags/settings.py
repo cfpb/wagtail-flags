@@ -41,7 +41,11 @@ class Flag:
 
     @cached_property
     def dynamic_conditions(self):
-        """ Get dynamic flag conditions from models.FlagState """
+        """ Get dynamic flag conditions from models.FlagState
+        after Django is ready and the flags app is fully migrated """
+        if not apps.get_app_config('flags').dynamic_conditions_ready:
+            return []
+
         # Get condition callables for our dynamic-configured conditions
         FlagState = apps.get_model('flags', 'FlagState')
         condition_fns = [(s.condition, fn, s.value, s)

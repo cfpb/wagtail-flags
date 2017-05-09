@@ -1,3 +1,4 @@
+from django.apps import apps
 from django.test import TestCase, override_settings
 
 import flags.settings
@@ -17,6 +18,9 @@ SOURCED_FLAG = True
 
 class FlagTestCase(TestCase):
 
+    def setUp(self):
+        apps.get_app_config('flags').dynamic_conditions_ready = True
+
     def test_eq(self):
         flag1 = Flag('MY_FLAG')
         flag2 = Flag('MY_FLAG')
@@ -34,6 +38,18 @@ class FlagTestCase(TestCase):
                                  condition='parameter',
                                  value='MY_FLAG')
         self.assertEqual(len(list(flag.dynamic_conditions)), 1)
+
+    def test_dynamic_conditions_not_ready(self):
+        # Add a dyanmic (database) condition
+        flag = Flag('MY_FLAG')
+        FlagState.objects.create(name='MY_FLAG',
+                                 condition='parameter',
+                                 value='MY_FLAG')
+
+        # Make sure that if app_config.dynamic_conditions_ready is False
+        # nothing is returned.
+        apps.get_app_config('flags').dynamic_conditions_ready = False
+        self.assertEqual(len(list(flag.dynamic_conditions)), 0)
 
     def test_conditions(self):
         flag = Flag('MY_FLAG', {'boolean': True})
