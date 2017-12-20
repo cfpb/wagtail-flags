@@ -1,5 +1,4 @@
 from django.db import models
-from django.http import Http404
 
 from wagtail.wagtailadmin.edit_handlers import FieldPanel, MultiFieldPanel
 from wagtail.wagtailcore.models import Page
@@ -31,17 +30,25 @@ class FlaggablePageMixin(models.Model):
     revision instead of the published revision based on feature flag state.
     It is an alternative to inheriting directly from FlaggablePage. """
 
-    feature_flag_name = models.CharField(max_length=64, blank=True)
+    feature_flag_name = models.CharField(
+        verbose_name="Feature flag",
+        max_length=64,
+        blank=True,
+        help_text=("The selected feature flag will control whether the draft "
+                   "version of this page is visible live for the feature "
+                   "flag's conditions")
+    )
     show_draft_with_feature_flag = models.BooleanField(
-        verbose_name='show draft with feature flag',
+        verbose_name="Show draft",
         default=False,
-        help_text=("Whether a this page's latest draft will appear when the "
-                   "selected feature flag is enabled")
+        help_text=("Show the latest draft of this page live regardless of "
+                   "published status, when the selected feature flag is "
+                   "enabled.")
     )
 
     flag_panels = [
+        FieldPanel('show_draft_with_feature_flag', 'Feature flag enabled'),
         FlagChooserPanel('feature_flag_name'),
-        FieldPanel('show_draft_with_feature_flag', 'Feature flag enabled')
     ]
 
     settings_panels = [
