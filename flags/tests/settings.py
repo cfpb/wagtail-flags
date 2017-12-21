@@ -2,6 +2,7 @@ from __future__ import absolute_import, unicode_literals
 
 import os
 
+
 SECRET_KEY = 'not needed'
 
 DATABASES = {
@@ -25,6 +26,8 @@ INSTALLED_APPS = (
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'wagtail.wagtailcore',
+    'wagtail.wagtailadmin',
+    'wagtail.wagtailusers',
     'flags',
 )
 

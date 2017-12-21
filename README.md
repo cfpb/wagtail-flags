@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.org/cfpb/wagtail-flags.svg?branch=master)](https://travis-ci.org/cfpb/wagtail-flags)
 [![Coverage Status](https://coveralls.io/repos/github/cfpb/wagtail-flags/badge.svg?branch=master)](https://coveralls.io/github/cfpb/wagtail-flags?branch=master)
 
-Feature flags allow you to toggle functionality in both Django settings and the Wagtail or Django admin based on configurable conditions.
+Feature flags allow you to toggle functionality and reveal Wagtail page drafts based on conditions that are configurable in Django settings, the Wagtail admin, or the Django admin.
 
 ![Feature flags in the Wagtail admin](https://raw.githubusercontent.com/cfpb/wagtail-flags/master/screenshot_list.png)
 
@@ -11,14 +11,16 @@ Feature flags allow you to toggle functionality in both Django settings and the 
 - [Installation](#installation)
 - [Concepts](#concepts)
 - [Usage](#usage)
-    - [Overview](#overview)
-    - [Adding Flags](#adding-flags)
-        - [Defining flags](#defining-flags)
-        - [Built-in conditions](#built-in-conditions)
+    - [Quickstart](#quickstart)
+    - [Defining flags](#defining-flags)
+    - [Using flags in code](#using-flags-in-code)
+    - [Using flags in Wagtail pages](#using-flags-in-wagtail-pages)
+    - [Built-in conditions](#built-in-conditions)
 - [API](#api)
     - [Flag state](#flag-state)
     - [Flag decorators](#flag-decorators)
     - [Flagged URLs](#flagged-urls)
+    - [Wagtail pages](#wagtail-pages)
     - [Django templates](#django-templates)
     - [Jinja2 templates](#jinja2-templates)
     - [Conditions](#conditions)
@@ -30,7 +32,7 @@ Feature flags allow you to toggle functionality in both Django settings and the 
 ## Dependencies
 
 - Django 1.8+
-- Wagtail 1.8+
+- Wagtail 1.10+
 - Python 2.7+, 3.6+
 
 ## Installation
@@ -53,15 +55,15 @@ pip install wagtail-flags
 
 ## Concepts
 
-Feature flags in Wagtail-Flags are identified by simple strings that are enabled when the conditions they are associated with are met. These flags can be used to wrap code and template content that should only be used when a flag is enabled or disabled.
+Feature flags in Wagtail-Flags are identified by simple strings that are enabled when the conditions they are associated with are met. These flags can be used to wrap code, template content, and Wagtail page drafts that should only be exposed to users when a flag is enabled or disabled.
 
 Conditions determine whether a flag is enabled or disabled by comparing a defined expected value of some kind with the value at the time the flag is checked. In many cases, the flag is checked during a request, and some piece of the request's metadata is what is compared. For example, a feature flag that is enabled for a specific Wagtail Site would be enabled if the request's site matches the condition's site.
 
 ## Usage
 
-### Overview
+### Quickstart
 
-To use Wagtail-Flags you first need to define the flag, use the flag in code, and define conditions for the flag to be enabled.
+To use Wagtail-Flags you first need to define the flag, use the flag, and define conditions for the flag to be enabled.
 
 First, define the flag in Django `settings.py`:
 
@@ -99,12 +101,9 @@ Then in the Wagtail admin add conditions for the flag in "Settings", "Flags":
 
 ![Creating conditions in the Wagtail admin](https://raw.githubusercontent.com/cfpb/wagtail-flags/master/screenshot_create.png)
 
-
 Then visiting the URL `/mypage?enable_my_flag=True` should show you the flagged `<div>` in the template.
 
-### Adding flags
-
-#### Defining flags
+### Defining flags
 
 Flags are defined in Django settings with the conditions in which they are enabled.
 
@@ -120,9 +119,61 @@ FLAGS = {
 
 The set of conditions can be none (flag will never be enabled), one (only condition that has to be met for the flag to be enabled), or many (all have to be met for the flag to be enabled).
 
-Additional conditions can be added in the Django or Wagtail admin for any defined flag (illustrated in [Usage](#usage)). Conditions added in the Django or Wagtail admin can be changed without restarting Django, conditions defined in `settings.py` cannot.
+Additional conditions can be added in the Django or Wagtail admin for any defined flag (illustrated in [Usage](#usage)). Conditions added in the Django or Wagtail admin can be changed without restarting Django, conditions defined in `settings.py` cannot. See below [for a list of built-in conditions](#built-in-conditions).
 
-#### Built-in conditions
+### Using flags in code
+
+Flags can be used in Python code:
+
+```python
+from flags.state import flag_enabled
+
+if flag_enabled('MY_FLAG', request=a_request):
+	print("My feature flag is enabled")	
+```
+
+Django templates:
+
+```django
+{% flag_enabled 'MY_FLAG' as my_flag %}
+{% if my_flag %}
+  <div>
+    I’m the result of a feature flag.   
+  </div>
+{% endif %}
+```
+
+Jinja2 templates:
+
+```jinja
+{% if flag_enabled('MY_FLAG', request) %}
+  <div>
+    I’m the result of a feature flag.   
+  </div>
+{% endif %}
+```
+
+And Django `urls.py`:
+
+```python
+from flags.urls import flagged_url, flagged_urls
+
+urlpatterns = [
+    flagged_url('MY_FLAG', r'^an-url$', view_requiring_flag, state=True),
+]
+```
+
+See the [API documentation below](#api) for more details and examples.
+
+### Using flags in Wagtail pages
+
+The most recent draft of a Wagtail page can also be revealed using a feature flag if the page either inherits from `FlaggablePage` or `FlaggablePageMixin`. First the flag [must be defined in settings](#defining-flags). Then in the particular page's editor interface there should be a "Feature flags" panel that will allow you to serve the latest draft revision of the page rather than the latest published revision if a particular feature flag is enabled. 
+
+![Configuring page drafts based on feature flag state](https://raw.githubusercontent.com/cfpb/wagtail-flags/master/screenshot_page.png)
+
+See the [Wagtail Pages API documentation below](#wagtail-pages) for more about how to include flaggable drafts in Wagtail `Page` subclasses.
+
+### Built-in conditions
 
 Wagtail-Flags comes with the following conditions built-in:
 
@@ -181,6 +232,7 @@ Allows a flag to be enabled after a given date (and time) given in [ISO 8601 for
 ```python
 FLAGS = {'MY_FLAG': {'after date': '2017-06-01T12:00'}}
 ```
+
 
 ## API
 
@@ -312,6 +364,68 @@ with flagged_urls('MY_FLAG') as url:
 urlpatterns = urlpatterns + flagged_url_patterns
 ```
 
+### Wagtail Pages
+
+```python
+from flags.models import FlaggablePageMixin, FlaggablePage
+```
+
+#### `FlaggablePageMixin`
+
+This is a model mixin class can be be mixed-in along side the Wagtail `Page` model (or a subclass thereof) to add the viewing of the latest draft revision instead of the published revision based on feature flag state. It is an alternative to inheriting directly from FlaggablePage.
+
+##### `feature_flag_name`
+
+The selected feature flag will control whether the draft version of this page is visible live for the feature flag's conditions.
+
+##### `show_draft_with_feature_flag`
+
+Show the latest draft of this page live regardless of published status, when the selected feature flag is enabled.
+
+##### `flag_panels`
+
+`FlaggablePage.flag_panels` provides the feature flag settings panels.
+Any subclass of `FlaggablePage` that provides its own Wagtail `settings_panels` should include `flag_panels` as a `MultiFieldPanel`:
+
+```python
+settings_panels = [
+    MultiFieldPanel(FlaggablePageMixin.flag_panels, 'Feature flag'),
+]
+```
+
+##### `serve_flaggable(self, request, *args, **kwargs)`
+
+`serve_flaggable` will serve a request based on the state of a feature flag. If the flag is enabled and `show_draft_with_feature_flag` is `True`, the latest draft revision of the page will be served. Otherwise the published revision will be served (normal Wagtail behavior). 
+
+##### `route_flaggable(self, request, path_components)`
+
+`route_flaggable` will route a request based on the state of a feature flag. If the flag is enabled and `show_draft_with_feature_flag` is `True`, the latest draft revision of the page will be routed. Otherwise the routing falls back to normal Wagtail behavior.
+
+This has the effect of making draft revisions of pages that have never been published visible based on the feature flag state and `show_draft_with_feature_flag`.
+
+#### `FlaggablePage`
+
+This `Page` subclass can be inheritted by a custom Wagtail page model and will allow the user to choose to serve the latest draft revision instead of the published revision based on feature flag state. It is a subclass of `wagtail.wagtailcore.Page` and `FlaggablePageMixin`.
+
+As with `FlaggablePageMixin`, if a subclass of `FlaggablePage defines its own `settings_panels`, it will need to include `FlaggablePage.flag_panels`.
+
+```python
+settings_panels = [
+    MultiFieldPanel(FlaggablePage.flag_panels, 'Feature flag'),
+]
+``` 
+
+The feature flag state is checked in the `serve_flaggable()` method provided by `FlaggablePageMixin`, 
+Any subclass of `FlaggablePage` that overrides `serve()` or `route()` will also need to ensure that it calls either `super(MyPageType, self).serve()` or self.serve_flaggable()`
+
+```python
+def serve(self, request, *args, **kwargs):
+    return self.serve_flaggable(request, *args, **kwargs)
+
+def route(self, request, path_components):
+    return self.route_flaggable(request, path_components)
+```
+
 ### Django templates
 
 Wagtail-Flags provides a template tag library that can be used to evaluate flags in Django templates.
@@ -327,7 +441,7 @@ Returns `True` if a flag is enabled by passing the current request to its condit
 ```django
 {% flag_enabled 'MY_FLAG' as my_flag %}
 {% if my_flag %}
-  <div class="m-global-banner">
+  <div>
     I’m the result of a feature flag.   
   </div>
 {% endif %}
@@ -340,7 +454,7 @@ Returns `True` if a flag is disabled by passing the current request to its condi
 ```django
 {% flag_disabled 'MY_FLAG' as my_flag %}
 {% if my_flag %}
-  <div class="m-global-banner">
+  <div>
     I’m the result of a feature flag that is not enabled.
   </div>
 {% endif %}
@@ -370,7 +484,7 @@ Returns `True` if a flag is enabled by for the given request, otherwise returns 
 
 ```jinja
 {% if flag_enabled('MY_FLAG', request) %}
-  <div class="m-global-banner">
+  <div>
     I’m the result of a feature flag.   
   </div>
 {% endif %}
@@ -383,12 +497,11 @@ Returns `True` if a flag is disabled by for the given request, otherwise returns
 
 ```jinja
 {% if flag_disabled('MY_FLAG', request) %}
-  <div class="m-global-banner">
+  <div>
     I’m the result of a feature flag that is not enabled.
   </div>
 {% endif %}
 ```
-
 
 ### Conditions
 

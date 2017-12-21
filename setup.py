@@ -9,14 +9,13 @@ except (IOError, ImportError):
 
 install_requires = [
     'Django>=1.8,<1.12',
-    'wagtail>=1.8,<1.11',
+    'wagtail>=1.10,<1.14',
 ]
 
 
 testing_extras = [
     'mock>=2.0.0',
     'coverage>=3.7.0',
-    'flake8>=2.2.0',
 ]
 
 
@@ -28,7 +27,7 @@ setup(
     description='Feature flags for Wagtail sites',
     long_description=long_description,
     license='CC0',
-    version='2.0.7',
+    version='2.0.8',
     include_package_data=True,
     packages=find_packages(),
     install_requires=install_requires,
@@ -37,10 +36,8 @@ setup(
     },
     classifiers=[
         'Framework :: Django',
-        'Framework :: Django :: 1.10',
         'Framework :: Django :: 1.11',
         'Framework :: Django :: 1.8',
-        'Framework :: Django :: 1.9',
         'License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication',
         'License :: Public Domain',
         'Programming Language :: Python',
