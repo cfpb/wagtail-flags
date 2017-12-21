@@ -40,9 +40,9 @@ class TestFlagChooserPanel(TestCase):
         )
         result = field_panel.render_as_object()
 
-        self.assertIn('<legend>Feature flag name</legend>', result)
+        self.assertIn('<legend>Feature flag</legend>', result)
         self.assertNotIn(
-            '<label for="id_feature_flag_name">Feature flag name:</label>',
+            '<label for="id_feature_flag_name">Feature flag:</label>',
             result)
 
         # check that the populated form field is included
@@ -66,7 +66,7 @@ class TestFlagChooserPanel(TestCase):
 
         # check that label is output in the 'field' style
         self.assertIn(
-            '<label for="id_feature_flag_name">Feature flag name:</label>',
+            '<label for="id_feature_flag_name">Feature flag:</label>',
             result)
         self.assertNotIn('<legend>Feature flag</legend>', result)
 

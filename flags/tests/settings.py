@@ -26,6 +26,7 @@ INSTALLED_APPS = (
     'django.contrib.contenttypes',
     'wagtail.wagtailcore',
     'wagtail.wagtailadmin',
+    'wagtail.wagtailusers',
     'flags',
 )
 
