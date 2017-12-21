@@ -32,7 +32,7 @@ Feature flags allow you to toggle functionality and reveal Wagtail page drafts b
 ## Dependencies
 
 - Django 1.8+
-- Wagtail 1.9+
+- Wagtail 1.10+
 - Python 2.7+, 3.6+
 
 ## Installation
