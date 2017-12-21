@@ -416,7 +416,7 @@ settings_panels = [
 ``` 
 
 The feature flag state is checked in the `serve_flaggable()` method provided by `FlaggablePageMixin`, 
-Any subclass of `FlaggablePage` that overrides `serve()` or `route()` will also need to sure that it calls either `super(MyPageType, self).serve()` or self.serve_flaggable()`
+Any subclass of `FlaggablePage` that overrides `serve()` or `route()` will also need to ensure that it calls either `super(MyPageType, self).serve()` or self.serve_flaggable()`
 
 ```python
 def serve(self, request, *args, **kwargs):
