@@ -1,8 +1,8 @@
 from django.test import TestCase, override_settings
 from django.test.client import RequestFactory
-import mock
 
-from flags.models import FlagState, FlaggablePageMixin, FlaggablePage
+import mock
+from flags.models import FlaggablePage, FlaggablePageMixin, FlagState
 
 
 class FlagStateTestCase(TestCase):

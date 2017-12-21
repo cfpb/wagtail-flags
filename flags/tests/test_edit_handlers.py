@@ -1,9 +1,7 @@
-from django.test import TestCase, override_settings
 from django import forms
+from django.test import TestCase, override_settings
 
-from wagtail.wagtailadmin.edit_handlers import (
-    ObjectList
-)
+from wagtail.wagtailadmin.edit_handlers import ObjectList
 
 from flags.edit_handlers import FlagChooserPanel
 from flags.models import FlaggablePage
