@@ -52,7 +52,7 @@ class FlaggablePageMixin(models.Model):
     ]
 
     settings_panels = [
-        MultiFieldPanel(flag_panels, 'Feature flag'),
+        MultiFieldPanel(flag_panels, 'Feature flagged drafts'),
     ]
 
     class Meta:
