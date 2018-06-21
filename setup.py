@@ -1,23 +1,16 @@
 from setuptools import find_packages, setup
 
-try:
-    import pypandoc
-    long_description = pypandoc.convert('README.md', 'rst')
-except (IOError, ImportError):
-    long_description = open('README.md', 'r').read()
 
+long_description = open('README.md', 'r').read()
 
 install_requires = [
-    'Django>=1.8,<2.1',
-    'wagtail>=1.10,<2.1',
+    'wagtail>=1.10,<2.2',
+    'django-flags>=3.0,<4.0'
 ]
-
 
 testing_extras = [
-    'mock>=2.0.0',
     'coverage>=3.7.0',
 ]
-
 
 setup(
     name='wagtail-flags',
@@ -26,8 +19,9 @@ setup(
     author_email='tech@cfpb.gov',
     description='Feature flags for Wagtail sites',
     long_description=long_description,
+    long_description_content_type='text/markdown',
     license='CC0',
-    version='2.1.0',
+    version='3.0.0',
     include_package_data=True,
     packages=find_packages(),
     install_requires=install_requires,
