@@ -1,6 +1,5 @@
 {% extends "wagtailadmin/base.html" %}
 {% load i18n %}
-{% load gravatar %}
 {% block titletag %}{% trans "Flags" %}{% endblock %}
 
 {% block content %}
@@ -44,7 +43,7 @@
                       </td>
                       <td>
                         {% if state %}
-                        <a  href="{% url 'flagadmin:delete' state.pk %}" class="button icon text-replace hover-no icon-bin">Delete</a>
+                        <a  href="{% url 'wagtailflags:delete' state.pk %}" class="button icon text-replace hover-no icon-bin">Delete</a>
                         {% endif %}
                       </td>
                   </tr>
@@ -60,7 +59,7 @@
             </tbody>
         </table>
 
-        <a href="{% url 'flagadmin:create' %}" class="button bicolor icon icon-plus">Add a condition</a>
+        <a href="{% url 'wagtailflags:create' %}" class="button bicolor icon icon-plus">Add a condition</a>
 
 
         <h2>Unconfigured flags</h2>
@@ -94,7 +93,7 @@
                       <b>{{ state.value }}</b>
                     </td>
                     <td>
-                      <a  href="{% url 'flagadmin:delete' state.pk %}" class="button icon text-replace hover-no icon-bin">Delete</a>
+                      <a  href="{% url 'wagtailflags:delete' state.pk %}" class="button icon text-replace hover-no icon-bin">Delete</a>
                     </td>
                 </tr>
                 {% endif %}
