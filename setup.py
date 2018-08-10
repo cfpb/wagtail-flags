@@ -4,7 +4,7 @@ from setuptools import find_packages, setup
 long_description = open('README.md', 'r').read()
 
 install_requires = [
-    'wagtail>=1.10,<2.2',
+    'wagtail>=1.10,<2.3',
     'django-flags>=3.0,<4.0'
 ]
 
@@ -21,7 +21,7 @@ setup(
     long_description=long_description,
     long_description_content_type='text/markdown',
     license='CC0',
-    version='3.0.0',
+    version='3.0.1',
     include_package_data=True,
     packages=find_packages(),
     install_requires=install_requires,
@@ -33,6 +33,7 @@ setup(
         'Framework :: Django :: 1.11',
         'Framework :: Django :: 1.8',
         'Framework :: Django :: 2.0',
+        'Framework :: Django :: 2.1',
         'Framework :: Wagtail',
         'Framework :: Wagtail :: 1',
         'Framework :: Wagtail :: 2',
