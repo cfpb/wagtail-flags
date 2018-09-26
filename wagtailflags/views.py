@@ -4,14 +4,12 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from flags.forms import FlagStateForm
 from flags.models import FlagState
-from flags.settings import get_flags
+from flags.sources import get_flags
 
 
 def index(request):
-    flags = OrderedDict(sorted(get_flags().items(), key=lambda x: x[0]))
     context = {
-        'flag_states': FlagState.objects.order_by('name'),
-        'flags': flags,
+        'flags': OrderedDict(sorted(get_flags().items(), key=lambda x: x[0])),
     }
     return render(request, 'wagtailflags/index.html', context)
 

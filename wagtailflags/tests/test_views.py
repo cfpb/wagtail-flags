@@ -11,8 +11,8 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
         self.login()
 
     def test_flags_index(self):
-        self.orphaned_flag = FlagState.objects.create(
-            name='ORPHANED_FLAG',
+        self.dbonly_flag = FlagState.objects.create(
+            name='DBONLY_FLAG',
             condition='boolean',
             value='True'
         )
@@ -27,11 +27,7 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
         self.assertContains(response, 'is never enabled')
 
         self.assertIn(
-            self.orphaned_flag,
-            response.context['flag_states']
-        )
-        self.assertNotIn(
-            self.orphaned_flag.name,
+            self.dbonly_flag.name,
             response.context['flags']
         )
 
