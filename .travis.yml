@@ -1,37 +1,30 @@
 language: python
 cache: pip
-
 matrix:
   include:
-    - env: TOXENV=lint
-      python: 3.6
-    - env: TOXENV=py27-dj18-wag113
-      python: 2.7
-    - env: TOXENV=py27-dj111-wag113
-      python: 2.7
-    - env: TOXENV=py36-dj18-wag113
-      python: 3.6
-    - env: TOXENV=py36-dj111-wag113
-      python: 3.6
-    - env: TOXENV=py36-dj20-wag20
-      python: 3.6
-
-install:
-  pip install tox coveralls
-
-script:
-  tox
-
-after_success:
-  coveralls
-
+  - env: TOXENV=lint
+    python: 3.6
+  - env: TOXENV=py27-dj111-wag113
+    python: 2.7
+  - env: TOXENV=py36-dj111-wag113
+    python: 3.6
+  - env: TOXENV=py36-dj111-wag22
+    python: 3.6
+  - env: TOXENV=py36-dj21-wag22
+    python: 3.6
+  - env: TOXENV=py36-dj21-wag23
+    python: 3.6
+install: pip install tox coveralls
+script: tox
+after_success: coveralls
 deploy:
+  matrix:
   - provider: pypi
     skip-cleanup: true
-    distributions: "sdist bdist_wheel --universal"
+    distributions: sdist bdist_wheel --universal
     user: cfpb
     password:
-        secure: "RQmVt7ulZ1qTr5xycobPguA6ctKfqdDaNEtjEdjgelk74g+N9lSMjGssEX0anqn3pQT0DTquby+Xb0C/MRhuWeNSTa61LESGKZ4nT02VAHsmEcmgxpcGbhtf/zvu4fztHNocF2ffSpsyq0n0YpJoT5N2znlw5sPX/aHNd+2m2tkiQu6yqUFR5PWcLDcz4KJNmyDk0miUTRHucS0yFanBsYjVCBzEWAWtnAxq5DCOW78dHOncfTCeAsMpjT/eVHOLldk9giEvBs/OJgWjFq8c/sVt3owCKhgkwbA1htXFGxofo9gl+m72cop3GEmUlOoTOMOs1AFTTMQQchyXqoLvDglRcBfOp+UhzCjEmckr7bKECa+Ok+8IeO7qyCR5Z1PsvMa5Vf12ZyEOsYs5QivQuA8tTKdB9Pni3rb/f0EqTLoWGb2Lg/WhP4GRSGxOC2SM4jJTEoi6bgzV3bvg1YIAPZIuK1whHPlo6EA1NzEOO/57iFw2G3R14Kw1B5QMXXLdKXulPc/FYRCcygqEkHl8nIe8FexeGEpJeC8URx+Gy9F0YxBL6Aqu3Jk09yhfyHTBbBaRCodfAUzt1/Ula3tOzYlIObxZhZnxNEETa3xY8lZWchXf4FEXleqsM1dGHprG1+dwBJwt1szTphd+kqc5I6/uuv1iVFOh4JAcCethG9s="
+      secure: "lxk9H3MNy6TWQX7loi0zu5DWRM2LZEaDwD8y3+PeJAidzwesv8axGheTAy/bBDq7uIi1CwIWd83m1ck4xY9e0hPTzfuG2T/SpNvQ+kP+65fYVXKyPROn0KemE5fh+gpskM7ilmar68luVGfG+ZhnCuYFm5KZpRa5U1V5qUbBQrhSo7IThUWMD/f3n7poip11jpXgTZSyy4YpCPo04bT9KUMigCpY3HLeg3E3wZ0EdrlJIYzqUQLAmwp/LjHWGwSIbJxdTevO7jPHLVEu/qychKpm5r09/PYkaBjvNfwk2cGTE22GCsqUx7Ox9mvcu9ASXrlVeSTG1DmmuaufeeyUjW5UHjRSSpC5gj45ftYnW0KIn0Qiji10d7A8gKVD2/26IkbV/JkuNn+7p0ARKx7k2y6elUS8RUC7zGiT5UoqxRCbkXkGSZv0BZjQ0JoKaLv6o6V8E+Wo9X9PYRBMMttAzQtuJ+m7jvw3V8ZVB6MeXZWUL5pclj1MgiA29cAZRBLRZKb1D7eYYL460zOECj28UeoBQn/RNocQfKCoU+0M08P4xo86P9n1w8DRMWVtHJf9wDK/SVEQAKV6UXTO+rswMquHPTyXcSr2ebRMmFygTxAjdSJ9l3/T/iPIYpV1HsfuPP95MKIBbKh8W2KGYOAvTilfEtEINo7fE0EeIV8TPHE="
     on:
       tags: true
       condition: $TOXENV = "py36-dj111-wag113"
