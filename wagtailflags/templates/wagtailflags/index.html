@@ -12,7 +12,7 @@
         {% if flags|length == 0 %}
         <p>No flags have been defined.</p>
         {% else %}
-        <h2>Available Flags</h2>
+        <h2>Flags</h2>
 
         <table class="listing">
             <thead>
@@ -25,8 +25,8 @@
                 </tr>
             </thead>
             <tbody>
-              {% for flag in flags.values %}
-                  {% for condition, fn, value, state in flag.conditions %}
+              {% for name, flag in flags.items %}
+                  {% for condition in flag.conditions %}
                   <tr>
                       {% if forloop.first %}
                       <td rowspan="{{ flag.conditions|length }}">
@@ -35,15 +35,15 @@
                       {% endif %}
                       <td>is enabled when</td>
                       <td>
-                        <b>{{ condition }}</b>
+                        <b>{{ condition.condition }}</b>
                       </td>
                       <td>is</td>
                       <td>
-                        <b>{{ value }}</b>
+                        <b>{{ condition.value }}</b>
                       </td>
                       <td>
-                        {% if state %}
-                        <a  href="{% url 'wagtailflags:delete' state.pk %}" class="button icon text-replace hover-no icon-bin">Delete</a>
+                        {% if condition.obj %}
+                        <a  href="{% url 'wagtailflags:delete' condition.obj.pk %}" class="button icon text-replace hover-no icon-bin">Delete</a>
                         {% endif %}
                       </td>
                   </tr>
@@ -60,47 +60,6 @@
         </table>
 
         <a href="{% url 'wagtailflags:create' %}" class="button bicolor icon icon-plus">Add a condition</a>
-
-
-        <h2>Unconfigured flags</h2>
-        <p>Conditions exist for these flags but they are not configured.</p>
-
-        <table class="listing">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th></th>
-                    <th>Condition</th>
-                    <th></th>
-                    <th>Value</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for state in flag_states %}
-                {% if state.name not in flags.keys %}
-                <tr>
-                    <td>
-                      <b>{{ state.name }}</b>
-                      <span title="flag not configured" style="color: #e9b04d; font-family: wagtail;">!</span>
-                    </td>
-                      <td>is enabled when</td>
-                    <td>
-                      <b>{{ state.condition }}</b>
-                    </td>
-                    <td>is</td>
-                    <td>
-                      <b>{{ state.value }}</b>
-                    </td>
-                    <td>
-                      <a  href="{% url 'wagtailflags:delete' state.pk %}" class="button icon text-replace hover-no icon-bin">Delete</a>
-                    </td>
-                </tr>
-                {% endif %}
-                {% endfor %}
-            </tbody>
-        </table>
-
 
         {% endif %}
     </div>
