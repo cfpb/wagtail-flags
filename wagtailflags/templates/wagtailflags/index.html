@@ -35,6 +35,9 @@
                       {% endif %}
                       <td>is enabled when</td>
                       <td>
+                        {% if condition.fn is None %}
+                        <span title="condition does not exist" style="color: #e9b04d; font-family: wagtail;">!</span>
+                        {% endif %}
                         <b>{{ condition.condition }}</b>
                       </td>
                       <td>is</td>
