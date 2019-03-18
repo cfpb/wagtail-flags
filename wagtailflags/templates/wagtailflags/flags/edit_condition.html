@@ -1,13 +1,21 @@
 {% extends "wagtailadmin/base.html" %}
 {% load i18n %}
-{% block titletag %}{% trans "Create a flag condition" as flags_str %}{% endblock %}
+{% block titletag %}{% if form.instance %}Edit {{ form.instance.condition }}{% else %}Create condition{% endif %}{% endblock %}
 
 {% block content %}
-    {% trans "Create a flag condition" as flags_str %}
-    {% include "wagtailadmin/shared/header.html" with title=flags_str icon="tag" %}
+    {% include "wagtailadmin/shared/header.html" with title=flag.name icon="tag" %}
 
-    <h2 class="nice-padding">New flag condition:</h2>
-    <form class="nice-padding" method="POST" action="{% url 'wagtailflags:create' %}">
+    <h2 class="nice-padding">
+        {% if form.instance %}Edit {{ form.instance.condition }}{% else %}Create condition{% endif %}
+    </h2>
+
+    {{ form.errors }}
+
+    {% if condition_pk %}
+    <form class="nice-padding" method="POST" action="{% url 'wagtailflags:edit_condition' flag.name condition_pk %}">
+    {% else %}
+    <form class="nice-padding" method="POST" action="{% url 'wagtailflags:create_condition' flag.name %}">
+    {% endif %}
         {% csrf_token %}
         <ul class="fields">
             <li class="actions">
@@ -28,8 +36,8 @@
                 {% endfor %}
             </li>
             <li class="actions">
-                <input class="button action-save button-longrunning" type="submit" value="Save new condition" />
-                <a class="button bicolor icon icon-cog" href="{% url 'wagtailflags:list' %}">Back to flag conditions…</a>
+                <input class="button action-save button-longrunning" type="submit" value="Save condition" />
+                <a class="button bicolor icon icon-cog" href="{% url 'wagtailflags:flag_index' flag.name %}">Back to {{ flag.name }}</a>
             </li>
         </ul>
     </form>
