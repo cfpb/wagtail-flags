@@ -3,11 +3,11 @@
 [![Build Status](https://travis-ci.org/cfpb/wagtail-flags.svg?branch=master)](https://travis-ci.org/cfpb/wagtail-flags)
 [![Coverage Status](https://coveralls.io/repos/github/cfpb/wagtail-flags/badge.svg?branch=master)](https://coveralls.io/github/cfpb/wagtail-flags?branch=master)
 
-Feature flags allow you to toggle functionality in the Wagtail based on configurable conditions. 
+Feature flags allow you to toggle functionality based on configurable conditions. 
 
 Wagtail-Flags adds a Wagtail admin UI and Wagtail Site-based condition on top of [Django-Flags](https://github.com/cfpb/django-flags). For a more complete overview of feature flags and how to use them, please see the [Django-Flags documentation](https://cfpb.github.io/django-flags).
 
-![Feature flags in the Wagtail admin](https://raw.githubusercontent.com/cfpb/wagtail-flags/master/screenshot_list.png)
+![Feature flags in the Wagtail admin](wagtailflags.gif)
 
 - [Dependencies](#dependencies)
 - [Installation](#installation)
@@ -27,9 +27,10 @@ Wagtail-Flags adds a Wagtail admin UI and Wagtail Site-based condition on top of
 
 ## Installation
 
-1. Install wagtail-flags:
+1. Install Django-Flags and Wagtail-Flags:
 
 ```shell
+pip install django-flags
 pip install wagtail-flags
 ```
 
@@ -52,7 +53,7 @@ First, define the flag in Django `settings.py`:
 
 ```python
 FLAGS = {
-    'MY_FLAG': {}
+    'MY_FLAG': []
 }
 ```
 
@@ -80,9 +81,9 @@ urlpatterns = [
 ]
 ```
 
-Finally, add conditions for the flag in the Wagtail admin under "Settings", "Flags":
+Finally, add conditions for the flag in the Wagtail admin under "Settings", "Flags", "MY_FLAG":
 
-![Creating conditions in the Wagtail admin](https://raw.githubusercontent.com/cfpb/wagtail-flags/master/screenshot_create.png)
+![Creating conditions in the Wagtail admin](screenshot_create.png)
 
 ## Extended conditions
 
@@ -93,7 +94,11 @@ Wagtail-Flags adds the following conditions to Django-Flags:
 Allows a flag to be enabled for a Wagtail site that matches the hostname and port in the condition value.
 
 ```python
-FLAGS = {'MY_FLAG': {'site': 'staging.mysite.com'}}
+FLAGS = {
+    'MY_FLAG': [
+        {'condition': 'site', 'value': 'staging.mysite.com'}
+    ],
+}
 ```
 
 ## Getting help
