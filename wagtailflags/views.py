@@ -2,7 +2,6 @@ from django.shortcuts import get_object_or_404, redirect, render
 
 from flags.models import FlagState
 from flags.sources import get_flags
-
 from wagtailflags.forms import FlagStateForm, NewFlagForm
 from wagtailflags.templatetags.wagtailflags_admin import enabled
 
