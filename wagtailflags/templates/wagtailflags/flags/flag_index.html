@@ -1,12 +1,16 @@
 {% extends "wagtailadmin/base.html" %}
 {% load i18n %}
-{% load wagtailflags %}
+{% load wagtailflags_admin %}
 {% block titletag %}{% trans "Flags" %}: {{ flag.name }}{% endblock %}
 
 {% block content %}
     {% include "wagtailflags/includes/header.html" with title=flag.name icon="tag" %}
 
     <div class="nice-padding">
+        <div class="help-block help-info">
+            <p>{{ flag|state_str }}</p>
+        </div>
+
         {% with flag|conditions as conditions %}     
             {% if conditions|length > 0 %}
             <h2>Conditions</h2>
@@ -49,11 +53,18 @@
             {% endif %}
         {% endwith %}
 
-        {% if flag|enabled %}
-        <a href="{% url 'wagtailflags:flag_index' flag.name %}?disable" class="button button-secondary no">Disable {{ flag.name }}</a>
-        {% else %}
-        <a href="{% url 'wagtailflags:flag_index' flag.name %}?enable" class="button button-secondary">Enable {{ flag.name }}</a>
+        {% if flag|enablable or flag|disablable %}
+            <a href="{% url 'wagtailflags:flag_index' flag.name %}?{% if flag|enabled %}disable{% else %}enable{% endif %}" 
+               class="button button-secondary{% if flag|enabled %} no{% endif %}">
+                {% if flag|enabled %}Disable{% else %}Enable{% endif %} {{ flag.name }}
+                {% if flag|required_conditions|length > 0 %}
+                when required conditions are met
+                {% else %}
+                for all requests
+                {% endif %}
+            </a>
         {% endif %}
         <a href="{% url 'wagtailflags:create_condition' flag.name %}" class="button bicolor icon icon-plus">Add a condition</a>
+
     </div>
 {% endblock %}

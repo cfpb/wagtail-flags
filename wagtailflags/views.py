@@ -3,8 +3,8 @@ from django.shortcuts import get_object_or_404, redirect, render
 from flags.models import FlagState
 from flags.sources import get_flags
 
-from wagtailflags.forms import NewFlagForm, FlagStateForm
-from wagtailflags.templatetags.wagtailflags import enabled
+from wagtailflags.forms import FlagStateForm, NewFlagForm
+from wagtailflags.templatetags.wagtailflags_admin import enabled
 
 
 def index(request):
@@ -69,6 +69,8 @@ def flag_index(request, name):
             boolean_condition_obj.value = False
 
         boolean_condition_obj.save()
+
+        return redirect('wagtailflags:flag_index', name=name)
 
     context = {
         'flag': flag,

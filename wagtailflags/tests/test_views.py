@@ -13,7 +13,8 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
         self.dbonly_flag = FlagState.objects.create(
             name='DBONLY_FLAG',
             condition='boolean',
-            value='True'
+            value='True',
+            required=False
         )
 
     def test_flags_index(self):
@@ -60,6 +61,21 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, 'Disable FLAG_ENABLED')
 
+    def test_flag_index_disabled(self):
+        response = self.client.get('/admin/flags/FLAG_DISABLED/')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Enable FLAG_DISABLED')
+
+    def test_flag_index_enabled_required_true(self):
+        response = self.client.get('/admin/flags/FLAG_ENABLED/')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Disable FLAG_ENABLED')
+
+    def test_flag_index_disabled_required_true(self):
+        response = self.client.get('/admin/flags/FLAG_ENABLED/')
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'Disable FLAG_ENABLED')
+
     def test_enable_flag(self):
         condition_query = FlagState.objects.filter(name='FLAG_DISABLED')
         self.assertEqual(len(condition_query.all()), 0)
@@ -69,7 +85,23 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
         self.assertEqual(condition_query.first().condition, 'boolean')
         self.assertEqual(condition_query.first().value, 'True')
 
+    def test_enable_flag_with_required_true(self):
+        condition_query = FlagState.objects.filter(name='FLAG_DISABLED')
+        self.assertEqual(len(condition_query.all()), 0)
+
+        self.client.get('/admin/flags/FLAG_DISABLED/', {'enable': ''})
+        self.assertEqual(len(condition_query.all()), 1)
+        self.assertEqual(condition_query.first().condition, 'boolean')
+        self.assertEqual(condition_query.first().value, 'True')
+
     def test_disable_flag(self):
+        condition_query = FlagState.objects.filter(name='DBONLY_FLAG')
+        self.client.get('/admin/flags/DBONLY_FLAG/', {'disable': ''})
+        self.assertEqual(len(condition_query.all()), 1)
+        self.assertEqual(condition_query.first().condition, 'boolean')
+        self.assertEqual(condition_query.first().value, 'False')
+
+    def test_disable_flag_with_required_true(self):
         condition_query = FlagState.objects.filter(name='DBONLY_FLAG')
         self.client.get('/admin/flags/DBONLY_FLAG/', {'disable': ''})
         self.assertEqual(len(condition_query.all()), 1)

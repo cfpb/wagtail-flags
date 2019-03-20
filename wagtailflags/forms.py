@@ -57,7 +57,7 @@ class FlagStateForm(forms.ModelForm):
         super(FlagStateForm, self).__init__(*args, **kwargs)
 
         self.fields['condition'].choices = [
-            (c, c) for c in sorted(get_conditions())
+            (c, c) for c in sorted(get_conditions()) if c != 'boolean'
         ]
 
     class Meta:
