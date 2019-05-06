@@ -1,29 +1,29 @@
+dist: xenial
 language: python
 cache: pip
+
 matrix:
   include:
-  - env: TOXENV=lint
-    python: 3.6
-  - env: TOXENV=py27-dj111-wag113
-    python: 2.7
-  - env: TOXENV=py36-dj111-wag113
-    python: 3.6
-  - env: TOXENV=py36-dj111-wag22
-    python: 3.6
-  - env: TOXENV=py36-dj21-wag22
-    python: 3.6
-  - env: TOXENV=py36-dj21-wag23
-    python: 3.6
-install: pip install tox coveralls
-script: tox
-after_success: coveralls
-deploy:
-  provider: pypi
-  skip-cleanup: true
-  distributions: sdist bdist_wheel --universal
-  user: cfpb
-  password:
-    secure: "lxk9H3MNy6TWQX7loi0zu5DWRM2LZEaDwD8y3+PeJAidzwesv8axGheTAy/bBDq7uIi1CwIWd83m1ck4xY9e0hPTzfuG2T/SpNvQ+kP+65fYVXKyPROn0KemE5fh+gpskM7ilmar68luVGfG+ZhnCuYFm5KZpRa5U1V5qUbBQrhSo7IThUWMD/f3n7poip11jpXgTZSyy4YpCPo04bT9KUMigCpY3HLeg3E3wZ0EdrlJIYzqUQLAmwp/LjHWGwSIbJxdTevO7jPHLVEu/qychKpm5r09/PYkaBjvNfwk2cGTE22GCsqUx7Ox9mvcu9ASXrlVeSTG1DmmuaufeeyUjW5UHjRSSpC5gj45ftYnW0KIn0Qiji10d7A8gKVD2/26IkbV/JkuNn+7p0ARKx7k2y6elUS8RUC7zGiT5UoqxRCbkXkGSZv0BZjQ0JoKaLv6o6V8E+Wo9X9PYRBMMttAzQtuJ+m7jvw3V8ZVB6MeXZWUL5pclj1MgiA29cAZRBLRZKb1D7eYYL460zOECj28UeoBQn/RNocQfKCoU+0M08P4xo86P9n1w8DRMWVtHJf9wDK/SVEQAKV6UXTO+rswMquHPTyXcSr2ebRMmFygTxAjdSJ9l3/T/iPIYpV1HsfuPP95MKIBbKh8W2KGYOAvTilfEtEINo7fE0EeIV8TPHE="
-  on:
-    tags: true
-    condition: $TOXENV = "py36-dj111-wag113"
+    - env: TOXENV=lint
+      python: 3.6
+    - env: TOXENV=py27-dj111-wag113
+      python: 2.7
+    - env: TOXENV=py36-dj111-wag113
+      python: 3.6
+    - env: TOXENV=py36-dj111-wag22
+      python: 3.6
+    - env: TOXENV=py36-dj21-wag23 
+      python: 3.6
+    - env: TOXENV=py36-dj21-wag24 
+      python: 3.6
+    - env: TOXENV=py36-dj22-wag25 
+      python: 3.6
+
+install:
+  pip install tox coveralls
+
+script:
+  tox
+
+after_success:
+  coveralls
