@@ -5,7 +5,7 @@ long_description = open('README.md', 'r').read()
 
 install_requires = [
     'wagtail>=1.13,<2.5',
-    'django-flags>=4.0,<5.0'
+    'django-flags>=4.2,<5.0'
 ]
 
 testing_extras = [
