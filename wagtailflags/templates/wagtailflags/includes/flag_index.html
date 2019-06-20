@@ -1,0 +1,63 @@
+{% load i18n %}
+{% load wagtailflags_admin %}
+{% load i18n feature_flags flags_debug wagtailflags_admin %}
+
+<section class="flag" id="{{ flag.name }}">
+    <div class="help-block help-info">
+        <p>{{ flag|state_str }}</p>
+    </div>
+
+    {% with flag|conditions_without_bool as conditions %}     
+        {% if conditions|length > 0 %}
+        <table class="listing">
+            <thead>
+                <tr>
+                    <th>Condition</th>
+                    <th>Value</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for condition in conditions %}
+                <tr>
+                    <td>
+                        <b>{{ condition.condition }}</b>
+                    </td>
+                    <td>
+                        {{ condition.value }}
+                    </td>
+                    <td>
+                        {% if condition.required %}
+                        Required
+                        {% else %}
+                        Optional
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if condition.obj %}
+                        <div class="button-group">
+                        <a  href="{% url 'wagtailflags:edit_condition' flag.name condition.obj.pk %}" class="button button-small button-secondary">Edit</a>
+                        <a  href="{% url 'wagtailflags:delete_condition' flag.name condition.obj.pk %}" class="button button-small no">Delete</a>
+                        </div>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+    {% endwith %}
+
+    {% if flag|enablable or flag|disablable %}
+        <a href="{% url 'wagtailflags:flag_index' flag.name %}?{% if flag|bool_enabled %}disable{% else %}enable{% endif %}" 
+            class="button button-secondary{% if flag|bool_enabled %} no{% endif %}">
+            {% if flag|bool_enabled %}Disable{% else %}Enable{% endif %} {{ flag.name }}
+            {% if flag|required_conditions_without_bool|length > 0 %}
+            when required conditions are met
+            {% else %}
+            for all requests
+            {% endif %}
+        </a>
+    {% endif %}
+    <a href="{% url 'wagtailflags:create_condition' flag.name %}" class="button bicolor icon icon-plus">Add a condition</a>
+</section>

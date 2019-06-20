@@ -1,9 +1,10 @@
 {% extends "wagtailadmin/base.html" %}
-{% load i18n %}
+{% load i18n feature_flags %}
 {% block titletag %}{% if form.instance %}Edit {{ form.instance.condition }}{% else %}Create condition{% endif %}{% endblock %}
 
 {% block content %}
     {% include "wagtailadmin/shared/header.html" with title=flag.name icon="tag" %}
+    {% flag_enabled 'WAGTAILFLAGS_ADMIN_BIG_LIST' as big_list_flag %}
 
     <h2 class="nice-padding">
         {% if form.instance %}Edit {{ form.instance.condition }}{% else %}Create condition{% endif %}
@@ -37,7 +38,11 @@
             </li>
             <li class="actions">
                 <input class="button action-save button-longrunning" type="submit" value="Save condition" />
-                <a class="button bicolor icon icon-cog" href="{% url 'wagtailflags:flag_index' flag.name %}">Back to {{ flag.name }}</a>
+                {% if big_list_flag %}
+                    <a class="button bicolor icon icon-cog" href="{% url 'wagtailflags:list' %}#{{ flag.name }}">Back to {{ flag.name }}</a>
+                {% else %}
+                    <a class="button bicolor icon icon-cog" href="{% url 'wagtailflags:flag_index' flag.name %}">Back to {{ flag.name }}</a>
+                {% endif %}
             </li>
         </ul>
     </form>

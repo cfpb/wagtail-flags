@@ -1,6 +1,5 @@
 {% extends "wagtailadmin/base.html" %}
-{% load i18n %}
-{% load wagtailflags_admin %}
+{% load i18n feature_flags flags_debug wagtailflags_admin %}
 
 {% block titletag %}{% trans "Flags" %}{% endblock %}
 
@@ -11,38 +10,40 @@
     {% include "wagtailflags/includes/header.html" with title=flags_str icon="tag" %}
 
     <div class="nice-padding">
-        <h2>Flags</h2>
-
         {% if flags|length == 0 %}
         <p>No flags have been defined.</p>
         {% else %}
-        <table class="listing">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-              {% for flag in flags %}
-                  <tr>
-                      <td>
-                          <b><a href="{% url 'wagtailflags:flag_index' flag.name %}">{{ flag.name }}</a></b>
-                      </td>
-                      <td>
-                          {{ flag|conditions|length }} conditions
-                      </td>
-                      <td>
-                          {% if flag|enabled %}Enabled{% endif %}
-                      </td>
-                  </tr>
-              {% endfor %}
-            </tbody>
-        </table>
-        {% endif %}
+            {% flag_enabled 'WAGTAILFLAGS_ADMIN_BIG_LIST' as big_list_flag %}
 
-        <a href="{% url 'wagtailflags:create_flag' %}" class="button bicolor icon icon-plus">Add a flag</a>
+            {% if big_list_flag %}
+                {% for flag in flags %}
+                    <h2>{{ flag.name }}</h2>
+                    {% include "wagtailflags/includes/flag_index.html" with flag=flag %}
+                {% endfor %}
+            {% else %}
+                <table class="listing">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for flag in flags %}
+                        <tr>
+                            <td>
+                                <b><a href="{% url 'wagtailflags:flag_index' flag.name %}">{{ flag.name }}</a></b>
+                            </td>
+                            <td>
+                                {{ flag|state_str }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            {% endif %}
+
+        {% endif %}
 
     </div>
 {% endblock %}

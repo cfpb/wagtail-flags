@@ -1,70 +1,13 @@
 {% extends "wagtailadmin/base.html" %}
 {% load i18n %}
-{% load wagtailflags_admin %}
 {% block titletag %}{% trans "Flags" %}: {{ flag.name }}{% endblock %}
 
 {% block content %}
     {% include "wagtailflags/includes/header.html" with title=flag.name icon="tag" %}
 
     <div class="nice-padding">
-        <div class="help-block help-info">
-            <p>{{ flag|state_str }}</p>
-        </div>
 
-        {% with flag|conditions as conditions %}     
-            {% if conditions|length > 0 %}
-            <h2>Conditions</h2>
-            <table class="listing">
-                <thead>
-                    <tr>
-                        <th>Condition</th>
-                        <th>Value</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for condition in conditions %}
-                    <tr>
-                        <td>
-                            <b>{{ condition.condition }}</b>
-                        </td>
-                        <td>
-                            {{ condition.value }}
-                        </td>
-                        <td>
-                            {% if condition.required %}
-                            Required
-                            {% else %}
-                            Optional
-                            {% endif %}
-                        </td>
-                        <td>
-                            {% if condition.obj %}
-                            <div class="button-group">
-                            <a  href="{% url 'wagtailflags:edit_condition' flag.name condition.obj.pk %}" class="button button-small button-secondary">Edit</a>
-                            <a  href="{% url 'wagtailflags:delete_condition' flag.name condition.obj.pk %}" class="button button-small no">Delete</a>
-                            </div>
-                            {% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            {% endif %}
-        {% endwith %}
-
-        {% if flag|enablable or flag|disablable %}
-            <a href="{% url 'wagtailflags:flag_index' flag.name %}?{% if flag|enabled %}disable{% else %}enable{% endif %}" 
-               class="button button-secondary{% if flag|enabled %} no{% endif %}">
-                {% if flag|enabled %}Disable{% else %}Enable{% endif %} {{ flag.name }}
-                {% if flag|required_conditions|length > 0 %}
-                when required conditions are met
-                {% else %}
-                for all requests
-                {% endif %}
-            </a>
-        {% endif %}
-        <a href="{% url 'wagtailflags:create_condition' flag.name %}" class="button bicolor icon icon-plus">Add a condition</a>
+        {% include "wagtailflags/includes/flag_index.html" with flag=flag %}
 
     </div>
 {% endblock %}
