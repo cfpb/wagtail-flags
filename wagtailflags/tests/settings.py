@@ -19,7 +19,7 @@ DATABASES = {
             'DATABASE_ENGINE',
             'django.db.backends.sqlite3'
         ),
-        'NAME': os.environ.get('DATABASE_NAME', 'wagtailflags'),
+        'NAME': os.environ.get('DATABASE_NAME', 'wagtailflags.db'),
         'USER': os.environ.get('DATABASE_USER', None),
         'PASSWORD': os.environ.get('DATABASE_PASS', None),
         'HOST': os.environ.get('DATABASE_HOST', None),
@@ -122,6 +122,7 @@ INSTALLED_APPS = (
     'wagtailflags',
 )
 
+STATIC_ROOT = '/tmp/static/'
 STATIC_URL = '/static/'
 
 TEMPLATES = [
@@ -145,6 +146,10 @@ TEMPLATES = [
 WAGTAIL_SITE_NAME = 'Test Site'
 
 FLAGS = {
-    'FLAG_ENABLED': {'boolean': True},
-    'FLAG_DISABLED': {'path matches': '/disabled_path'},
+    'FLAG_ENABLED': [
+        {'condition': 'boolean', 'value': True}
+    ],
+    'FLAG_DISABLED': [
+        {'condition': 'path matches', 'value': '/disabled_path'}
+    ],
 }
