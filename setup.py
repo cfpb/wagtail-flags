@@ -4,8 +4,8 @@ from setuptools import find_packages, setup
 long_description = open('README.md', 'r').read()
 
 install_requires = [
-    'wagtail>=1.10,<2.5',
-    'django-flags>=4.0,<5.0'
+    'wagtail>=1.13,<2.5',
+    'django-flags>=4.2,<5.0'
 ]
 
 testing_extras = [
@@ -31,7 +31,6 @@ setup(
     classifiers=[
         'Framework :: Django',
         'Framework :: Django :: 1.11',
-        'Framework :: Django :: 1.8',
         'Framework :: Django :: 2.0',
         'Framework :: Django :: 2.1',
         'Framework :: Django :: 2.2',

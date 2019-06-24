@@ -1,13 +1,15 @@
 {% extends "wagtailadmin/base.html" %}
 {% load i18n %}
-{% block titletag %}{% trans "Create a flag condition" as flags_str %}{% endblock %}
+{% block titletag %}Create a flag{% endblock %}
 
 {% block content %}
-    {% trans "Create a flag condition" as flags_str %}
-    {% include "wagtailadmin/shared/header.html" with title=flags_str icon="tag" %}
+    {% include "wagtailadmin/shared/header.html" with title=flag.name icon="tag" %}
 
-    <h2 class="nice-padding">New flag condition:</h2>
-    <form class="nice-padding" method="POST" action="{% url 'wagtailflags:create' %}">
+    <h2 class="nice-padding">
+        Create a flag
+    </h2>
+
+    <form class="nice-padding" method="POST" action="{% url 'wagtailflags:create_flag' %}">
         {% csrf_token %}
         <ul class="fields">
             <li class="actions">
@@ -28,8 +30,8 @@
                 {% endfor %}
             </li>
             <li class="actions">
-                <input class="button action-save button-longrunning" type="submit" value="Save new condition" />
-                <a class="button bicolor icon icon-cog" href="{% url 'wagtailflags:list' %}">Back to flag conditions…</a>
+                <input class="button action-save button-longrunning" type="submit" value="Save flag" />
+                <a class="button bicolor icon icon-cog" href="{% url 'wagtailflags:list' %}">Back to flags</a>
             </li>
         </ul>
     </form>

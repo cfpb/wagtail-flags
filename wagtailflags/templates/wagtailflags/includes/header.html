@@ -1,0 +1,9 @@
+{% if flag %}
+<ul class="breadcrumb flags-breadcrumb">
+  <li><a href="{% url 'wagtailflags:list' %}">Flags</a></li>
+  <li>{{ title }}</li>
+</ul>
+{% include "wagtailadmin/shared/header.html" with title=title icon=icon %}
+{% else %}
+{% include "wagtailadmin/shared/header.html" with title=title icon=icon add_text='Add flag' add_link='wagtailflags:create_flag' %}
+{% endif %}

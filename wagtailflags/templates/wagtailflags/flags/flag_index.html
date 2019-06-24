@@ -1,0 +1,13 @@
+{% extends "wagtailadmin/base.html" %}
+{% load i18n %}
+{% block titletag %}{% trans "Flags" %}: {{ flag.name }}{% endblock %}
+
+{% block content %}
+    {% include "wagtailflags/includes/header.html" with title=flag.name icon="tag" %}
+
+    <div class="nice-padding">
+
+        {% include "wagtailflags/includes/flag_index.html" with flag=flag %}
+
+    </div>
+{% endblock %}
