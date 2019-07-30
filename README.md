@@ -12,7 +12,7 @@ Wagtail-Flags adds a Wagtail admin UI and Wagtail Site-based condition on top of
 - [Dependencies](#dependencies)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Extended conditions](#built-in-conditions)
+- [Extended conditions](#extended-conditions)
 - [Getting help](#getting-help)
 - [Getting involved](#getting-involved)
 - [Licensing](#licensing)
