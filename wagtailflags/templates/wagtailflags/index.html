@@ -13,36 +13,26 @@
         {% if flags|length == 0 %}
         <p>No flags have been defined.</p>
         {% else %}
-            {% flag_enabled 'WAGTAILFLAGS_ADMIN_BIG_LIST' as big_list_flag %}
-
-            {% if big_list_flag %}
+            <table class="listing">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
                 {% for flag in flags %}
-                    <h2>{{ flag.name }}</h2>
-                    {% include "wagtailflags/includes/flag_index.html" with flag=flag %}
+                    <tr>
+                        <td>
+                            <b><a href="{% url 'wagtailflags:flag_index' flag.name %}">{{ flag.name }}</a></b>
+                        </td>
+                        <td>
+                            {{ flag|state_str }}
+                        </td>
+                    </tr>
                 {% endfor %}
-            {% else %}
-                <table class="listing">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for flag in flags %}
-                        <tr>
-                            <td>
-                                <b><a href="{% url 'wagtailflags:flag_index' flag.name %}">{{ flag.name }}</a></b>
-                            </td>
-                            <td>
-                                {{ flag|state_str }}
-                            </td>
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            {% endif %}
-
+                </tbody>
+            </table>
         {% endif %}
 
     </div>
