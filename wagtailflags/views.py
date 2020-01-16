@@ -1,3 +1,4 @@
+from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render, resolve_url
 
 from flags.models import FlagState
@@ -50,6 +51,9 @@ def create_flag(request):
 def flag_index(request, name):
     flag = get_flags().get(name)
 
+    if not flag:
+        raise Http404
+
     # If there's a database boolean condition, fetch it and treat it as a
     # on/off switch
     if 'enable' in request.GET or 'disable' in request.GET:
@@ -96,6 +100,10 @@ def flag_index(request, name):
 
 def edit_condition(request, name, condition_pk=None):
     flag = get_flags().get(name)
+
+    if not flag:
+        raise Http404
+
     try:
         condition = FlagState.objects.get(pk=condition_pk)
     except FlagState.DoesNotExist:
@@ -134,6 +142,10 @@ def edit_condition(request, name, condition_pk=None):
 
 def delete_condition(request, name, condition_pk):
     flag = get_flags().get(name)
+
+    if not flag:
+        raise Http404
+
     condition = get_object_or_404(FlagState, pk=condition_pk)
 
     if request.method == 'POST':
