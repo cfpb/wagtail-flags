@@ -1,5 +1,4 @@
-from django.http import HttpRequest
-from django.test import TestCase
+from django.test import RequestFactory, TestCase
 
 from flags.conditions import RequiredForCondition
 from wagtailflags.conditions import site_condition
@@ -15,7 +14,8 @@ class SiteConditionTestCase(TestCase):
 
     def setUp(self):
         self.site = Site.objects.get(is_default_site=True)
-        self.request = HttpRequest()
+        self.factory = RequestFactory()
+        self.request = self.factory.get('/')
         self.request.site = self.site
 
     def test_site_valid_string(self):
