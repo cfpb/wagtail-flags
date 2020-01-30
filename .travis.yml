@@ -8,15 +8,15 @@ matrix:
       python: 3.6
     - env: TOXENV=py36-dj111-wag113
       python: 3.6
-    - env: TOXENV=py36-dj111-wag22
+    - env: TOXENV=py36-dj111-wag23
       python: 3.6
-    - env: TOXENV=py36-dj21-wag23 
+    - env: TOXENV=py36-dj20-wag23
       python: 3.6
-    - env: TOXENV=py36-dj21-wag24 
+    - env: TOXENV=py36-dj22-wag23
       python: 3.6
-    - env: TOXENV=py36-dj22-wag27
+    - env: TOXENV=py36-dj22-wag24
       python: 3.6
-    - env: TOXENV=py37-dj22-wag27
+    - env: TOXENV=py36-dj22-wag24
       python: 3.7
 
 install:
