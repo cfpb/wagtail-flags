@@ -59,6 +59,10 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
         )
         self.assertContains(response, 'Flag named DBONLY_FLAG already exists')
 
+    def test_flag_index_nonexistent_flag_raises_404(self):
+        response = self.client.get('/admin/flags/THIS_FLAG_DOES_NOT_EXIST/')
+        self.assertEqual(response.status_code, 404)
+
     def test_flag_index(self):
         response = self.client.get('/admin/flags/FLAG_DISABLED/')
         self.assertEqual(response.status_code, 200)
@@ -133,6 +137,12 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
         self.assertEqual(condition_query.first().condition, 'boolean')
         self.assertEqual(condition_query.first().value, 'False')
 
+    def test_create_flag_condition_nonexistent_flag_raises_404(self):
+        response = self.client.get(
+            '/admin/flags/THIS_FLAG_DOES_NOT_EXIST/create/'
+        )
+        self.assertEqual(response.status_code, 404)
+
     def test_create_flag_condition(self):
         response = self.client.get('/admin/flags/DBONLY_FLAG/create/')
         self.assertEqual(response.status_code, 200)
@@ -155,6 +165,10 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
         }
         response = self.client.post('/admin/flags/DBONLY_FLAG/create/', params)
         self.assertRedirects(response, '/admin/flags/#DBONLY_FLAG')
+
+    def test_edit_flag_condition_nonexistent_flag_raises_404(self):
+        response = self.client.get('/admin/flags/THIS_FLAG_DOES_NOT_EXIST/99/')
+        self.assertEqual(response.status_code, 404)
 
     def test_edit_flag_condition(self):
         condition_obj = FlagState.objects.create(
@@ -200,6 +214,12 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
             params
         )
         self.assertRedirects(response, '/admin/flags/#DBONLY_FLAG')
+
+    def test_delete_flag_condition_nonexistent_flag_raises_404(self):
+        response = self.client.get(
+            '/admin/flags/THIS_FLAG_DOES_NOT_EXIST/99/delete/'
+        )
+        self.assertEqual(response.status_code, 404)
 
     def test_delete_flag_condition(self):
         condition_obj = FlagState.objects.create(
