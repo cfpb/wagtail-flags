@@ -14,9 +14,9 @@ matrix:
       python: 3.6
     - env: TOXENV=py36-dj22-wag23
       python: 3.6
-    - env: TOXENV=py36-dj22-wag27
+    - env: TOXENV=py36-dj22-wag28
       python: 3.6
-    - env: TOXENV=py38-dj22-wag27
+    - env: TOXENV=py38-dj22-wag28
       python: 3.8
 
 install:
