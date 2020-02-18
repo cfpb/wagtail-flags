@@ -26,7 +26,7 @@ Wagtail-Flags adds a Wagtail admin UI and Wagtail Site-based condition on top of
 - Django-Flags 4.2+ 
 
 It should be compatible at all intermediate versions, as well.
-If you find that it is not, please [file an issue](issues/new).
+If you find that it is not, please [file an issue](https://github.com/cfpb/wagtail-flags/issues/new).
 
 ## Installation
 
