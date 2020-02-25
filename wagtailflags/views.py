@@ -30,17 +30,9 @@ def create_flag(request):
         )
         if form.is_valid():
             form.save()
-            if flag_enabled('WAGTAILFLAGS_ADMIN_BIG_LIST'):
-                return redirect(
-                    '{flags_list}#{flag_name}'.format(
-                        flags_list=resolve_url('wagtailflags:list'),
-                        flag_name=form.instance.name
-                    )
-                )
-            else:
-                return redirect(
-                    'wagtailflags:flag_index', name=form.instance.name
-                )
+            return redirect(
+                'wagtailflags:flag_index', name=form.instance.name
+            )
     else:
         form = NewFlagForm()
 
@@ -81,16 +73,7 @@ def flag_index(request, name):
             boolean_condition_obj.value = False
 
         boolean_condition_obj.save()
-
-        if flag_enabled('WAGTAILFLAGS_ADMIN_BIG_LIST'):
-            return redirect(
-                '{flags_list}#{flag_name}'.format(
-                    flags_list=resolve_url('wagtailflags:list'),
-                    flag_name=name
-                )
-            )
-        else:
-            return redirect('wagtailflags:flag_index', name=name)
+        return redirect('wagtailflags:flag_index', name=name)
 
     context = {
         'flag': flag,
@@ -115,18 +98,9 @@ def edit_condition(request, name, condition_pk=None):
         )
         if form.is_valid():
             form.save()
-
-            if flag_enabled('WAGTAILFLAGS_ADMIN_BIG_LIST'):
-                return redirect(
-                    '{flags_list}#{flag_name}'.format(
-                        flags_list=resolve_url('wagtailflags:list'),
-                        flag_name=form.instance.name
-                    )
-                )
-            else:
-                return redirect(
-                    'wagtailflags:flag_index', name=form.instance.name
-                )
+            return redirect(
+                'wagtailflags:flag_index', name=name
+            )
 
     else:
         form = FlagStateForm(initial={'name': name}, instance=condition)
@@ -150,16 +124,7 @@ def delete_condition(request, name, condition_pk):
 
     if request.method == 'POST':
         condition.delete()
-
-        if flag_enabled('WAGTAILFLAGS_ADMIN_BIG_LIST'):
-            return redirect(
-                '{flags_list}#{flag_name}'.format(
-                    flags_list=resolve_url('wagtailflags:list'),
-                    flag_name=name
-                )
-            )
-        else:
-            return redirect('wagtailflags:flag_index', name=name)
+        return redirect('wagtailflags:flag_index', name=name)
 
     context = {
         'flag': flag,
