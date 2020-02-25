@@ -1,10 +1,9 @@
 {% extends "wagtailadmin/base.html" %}
 {% load i18n feature_flags %}
-{% block titletag %}{% if form.instance %}Edit {{ form.instance.condition }}{% else %}Create condition{% endif %}{% endblock %}
+{% block titletag %}{% if form.instance %}Edit {{ form.instance.condition }} condition{% else %}Create condition{% endif %}{% endblock %}
 
 {% block content %}
     {% include "wagtailadmin/shared/header.html" with title=flag.name icon="tag" %}
-    {% flag_enabled 'WAGTAILFLAGS_ADMIN_BIG_LIST' as big_list_flag %}
 
     <h2 class="nice-padding">
         {% if form.instance %}Edit {{ form.instance.condition }}{% else %}Create condition{% endif %}
@@ -19,30 +18,38 @@
     {% endif %}
         {% csrf_token %}
         <ul class="fields">
-            <li class="actions">
-                {% for field in form %}
-                    {% if field.errors %}
-                        <div class="help-block help-critical" style="margin-top:0;">
-                            {{ field.errors }}
+
+            {% for field in form %}
+            <li {% if field.field.required %}class="required"{% endif %}>
+                    {% if not field.is_hidden %}
+                        <div class="field">
+                            {{ field.label_tag }}
+
+                            <div class="field-content">
+                                <div class="input">
+                                    {{ field }}
+                                </div>
+                                {% if field.help_text %}
+                                    <p class="help">{{ field.help_text|safe }}</p>
+                                {% endif %}
+                            </div>
+
+                            {% if field.errors %}
+                                <div class="help-block help-critical" style="margin-top:0;">
+                                    {{ field.errors }}
+                                </div>
+                            {% endif %}
                         </div>
+                    {% else %}
+                        {{ field }}
                     {% endif %}
-                    <label>{{ field.label }}</label>
-                    <div class="field-content">
-                        <div class="input">
-                            {{ field }}
-                            <span></span>
-                        </div>
-                        <p class="help"></p>
-                    </div>
-                {% endfor %}
-            </li>
+
+                </li>
+            {% endfor %}
+
             <li class="actions">
                 <input class="button action-save button-longrunning" type="submit" value="Save condition" />
-                {% if big_list_flag %}
-                    <a class="button bicolor icon icon-cog" href="{% url 'wagtailflags:list' %}#{{ flag.name }}">Back to {{ flag.name }}</a>
-                {% else %}
-                    <a class="button bicolor icon icon-cog" href="{% url 'wagtailflags:flag_index' flag.name %}">Back to {{ flag.name }}</a>
-                {% endif %}
+                <a class="button bicolor icon icon-cog" href="{% url 'wagtailflags:flag_index' flag.name %}">Back to {{ flag.name }}</a>
             </li>
         </ul>
     </form>

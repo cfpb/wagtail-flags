@@ -37,9 +37,10 @@ class FlagStateForm(forms.ModelForm):
         label='Flag',
         required=True,
         disabled=True,
+        widget=forms.HiddenInput(),
     )
     condition = forms.ChoiceField(
-        label='Condition name',
+        label='Condition',
         required=True
     )
     value = forms.CharField(

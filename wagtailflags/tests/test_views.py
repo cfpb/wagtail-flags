@@ -1,4 +1,4 @@
-from django.test import TestCase, override_settings
+from django.test import TestCase
 
 from wagtail.tests.utils import WagtailTestUtils
 
@@ -40,15 +40,6 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
         self.assertEqual(new_flag_condition.condition, 'boolean')
         self.assertEqual(new_flag_condition.value, 'False')
         self.assertEqual(new_flag_condition.required, False)
-
-    @override_settings(
-        FLAGS={'WAGTAILFLAGS_ADMIN_BIG_LIST': [('boolean', True)]}
-    )
-    def test_flag_create_big_list(self):
-        response = self.client.post(
-            '/admin/flags/create/', {'name': 'NEW_FLAG'}
-        )
-        self.assertRedirects(response, '/admin/flags/#NEW_FLAG')
 
     def test_flag_create_existing(self):
         response = self.client.get('/admin/flags/create/')
@@ -102,18 +93,6 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
         self.assertEqual(condition_query.first().condition, 'boolean')
         self.assertEqual(condition_query.first().value, 'True')
 
-    @override_settings(
-        FLAGS={
-            'WAGTAILFLAGS_ADMIN_BIG_LIST': [('boolean', True)],
-            'FLAG_DISABLED': [],
-        }
-    )
-    def test_enable_flag_big_list(self):
-        response = self.client.get(
-            '/admin/flags/FLAG_DISABLED/', {'enable': ''}
-        )
-        self.assertRedirects(response, '/admin/flags/#FLAG_DISABLED')
-
     def test_enable_flag_with_required_true(self):
         condition_query = FlagState.objects.filter(name='FLAG_DISABLED')
         self.assertEqual(len(condition_query.all()), 0)
@@ -155,17 +134,6 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
         self.assertRedirects(response, '/admin/flags/DBONLY_FLAG/')
         self.assertEqual(len(FlagState.objects.all()), 2)
 
-    @override_settings(
-        FLAGS={'WAGTAILFLAGS_ADMIN_BIG_LIST': [('boolean', True)]}
-    )
-    def test_create_flag_condition_big_list(self):
-        params = {
-            'condition': 'path matches',
-            'value': '/db_path',
-        }
-        response = self.client.post('/admin/flags/DBONLY_FLAG/create/', params)
-        self.assertRedirects(response, '/admin/flags/#DBONLY_FLAG')
-
     def test_edit_flag_condition_nonexistent_flag_raises_404(self):
         response = self.client.get('/admin/flags/THIS_FLAG_DOES_NOT_EXIST/99/')
         self.assertEqual(response.status_code, 404)
@@ -196,25 +164,6 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
             'justice'
         )
 
-    @override_settings(
-        FLAGS={'WAGTAILFLAGS_ADMIN_BIG_LIST': [('boolean', True)]}
-    )
-    def test_edit_flag_condition_big_list(self):
-        condition_obj = FlagState.objects.create(
-            name='DBONLY_FLAG',
-            condition='user',
-            value='liberty'
-        )
-        params = {
-            'condition': 'user',
-            'value': 'justice',
-        }
-        response = self.client.post(
-            '/admin/flags/DBONLY_FLAG/{}/'.format(condition_obj.pk),
-            params
-        )
-        self.assertRedirects(response, '/admin/flags/#DBONLY_FLAG')
-
     def test_delete_flag_condition_nonexistent_flag_raises_404(self):
         response = self.client.get(
             '/admin/flags/THIS_FLAG_DOES_NOT_EXIST/99/delete/'
@@ -238,18 +187,3 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
         )
         self.assertRedirects(response, '/admin/flags/DBONLY_FLAG/')
         self.assertEqual(len(FlagState.objects.all()), 1)
-
-    @override_settings(
-        FLAGS={'WAGTAILFLAGS_ADMIN_BIG_LIST': [('boolean', True)]}
-    )
-    def test_delete_flag_condition_big_list(self):
-        condition_obj = FlagState.objects.create(
-            name='DBONLY_FLAG',
-            condition='user',
-            value='liberty'
-        )
-        self.assertEqual(len(FlagState.objects.all()), 2)
-        response = self.client.post(
-            '/admin/flags/DBONLY_FLAG/{}/delete/'.format(condition_obj.pk)
-        )
-        self.assertRedirects(response, '/admin/flags/#DBONLY_FLAG')
