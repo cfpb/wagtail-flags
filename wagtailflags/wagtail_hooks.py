@@ -1,22 +1,19 @@
 import django
-from django.conf.urls import include, url
 from django.templatetags.static import static
 from django.utils.html import format_html
+
+from wagtail.admin.menu import MenuItem
+from wagtail.core import hooks
 
 from wagtailflags import views
 
 
 try:  # pragma: no cover; >= 2.0
-    from django.urls import reverse
+    from django.urls import include, reverse, re_path
 except ImportError:  # pragma: no cover; fallback for Django < 2.0
+    from django.conf.urls import include
+    from django.conf.urls import url as re_path
     from django.core.urlresolvers import reverse
-
-try:  # pragma: no cover; Wagtail >= 2.0
-    from wagtail.admin.menu import MenuItem
-    from wagtail.core import hooks
-except ImportError:  # pragma: no cover; fallback for Wagtail < 2.0
-    from wagtail.wagtailadmin.menu import MenuItem
-    from wagtail.wagtailcore import hooks
 
 
 @hooks.register('register_settings_menu_item')
@@ -28,20 +25,20 @@ def register_flags_menu():
 @hooks.register('register_admin_urls')
 def register_flag_admin_urls():
     flagpatterns = [
-        url(r'^$', views.index, name='list'),
-        url(r'^create/$', views.create_flag, name='create_flag'),
-        url(r'^(?P<name>[\w\-]+)/$', views.flag_index, name='flag_index'),
-        url(
+        re_path(r'^$', views.index, name='list'),
+        re_path(r'^create/$', views.create_flag, name='create_flag'),
+        re_path(r'^(?P<name>[\w\-]+)/$', views.flag_index, name='flag_index'),
+        re_path(
             r'^(?P<name>[\w\-]+)/create/$',
             views.edit_condition,
             name='create_condition'
         ),
-        url(
+        re_path(
             r'^(?P<name>[\w\-]+)/(?P<condition_pk>\d+)/$',
             views.edit_condition,
             name='edit_condition'
         ),
-        url(
+        re_path(
             r'^(?P<name>[\w\-]+)/(?P<condition_pk>\d+)/delete/$',
             views.delete_condition,
             name='delete_condition'
@@ -50,14 +47,14 @@ def register_flag_admin_urls():
 
     if django.VERSION >= (1, 10):  # pragma: no cover
         urlpatterns = [
-            url(r'^flags/',
-                include((flagpatterns, 'wagtailflags'),
-                        namespace='wagtailflags'))
+            re_path(r'^flags/',
+                    include((flagpatterns, 'wagtailflags'),
+                            namespace='wagtailflags'))
         ]
     else:  # pragma: no cover; fallback for Django < 1.10
         urlpatterns = [
-            url(r'^flags/',
-                include((flagpatterns, 'wagtailflags', 'wagtailflags')))
+            re_path(r'^flags/',
+                    include((flagpatterns, 'wagtailflags', 'wagtailflags')))
         ]
 
     return urlpatterns
