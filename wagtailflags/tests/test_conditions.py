@@ -1,13 +1,9 @@
 from django.test import RequestFactory, TestCase
 
+from wagtail.core.models import Site
+
 from flags.conditions import RequiredForCondition
 from wagtailflags.conditions import site_condition
-
-
-try:
-    from wagtail.core.models import Site
-except ImportError:  # pragma: no cover; fallback for Wagtail < 2.0
-    from wagtail.wagtailcore.models import Site
 
 
 class SiteConditionTestCase(TestCase):

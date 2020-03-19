@@ -1,12 +1,13 @@
-from django.conf.urls import include, url
+from wagtail.admin import urls as wagtailadmin_urls
 
 
-try:  # pragma: no cover; Wagtail >= 2.0
-    from wagtail.admin import urls as wagtailadmin_urls
-except ImportError:  # pragma: no cover; fallback for Wagtail < 2.0
-    from wagtail.wagtailadmin import urls as wagtailadmin_urls
+try:  # pragma: no cover; >= 2.0
+    from django.urls import include, re_path
+except ImportError:  # pragma: no cover; fallback for Django < 2.0
+    from django.conf.urls import include
+    from django.conf.urls import url as re_path
 
 
 urlpatterns = [
-    url(r'^admin/', include(wagtailadmin_urls)),
+    re_path(r'^admin/', include(wagtailadmin_urls)),
 ]
