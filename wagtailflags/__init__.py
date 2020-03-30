@@ -1,1 +1,1 @@
-default_app_config = 'wagtailflags.apps.WagtailFlagsAppConfig'
+default_app_config = "wagtailflags.apps.WagtailFlagsAppConfig"
