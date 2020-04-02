@@ -9,5 +9,5 @@ except ImportError:  # pragma: no cover; fallback for Django < 2.0
 
 
 urlpatterns = [
-    re_path(r'^admin/', include(wagtailadmin_urls)),
+    re_path(r"^admin/", include(wagtailadmin_urls)),
 ]

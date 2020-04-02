@@ -9,34 +9,32 @@ from wagtailflags.forms import FlagStateForm, NewFlagForm
 
 def index(request):
     context = {
-        'flags': sorted(get_flags().values(), key=lambda x: x.name),
+        "flags": sorted(get_flags().values(), key=lambda x: x.name),
     }
-    return render(request, 'wagtailflags/index.html', context)
+    return render(request, "wagtailflags/index.html", context)
 
 
 def create_flag(request):
     """ Create a new flag.
     This will add a FlagState object with a custom name and a boolean: False
     condition """
-    if request.method == 'POST':
+    if request.method == "POST":
         form = NewFlagForm(
             request.POST,
             initial={
-                'condition': 'path matches',
-                'value': '/foo',
-                'required': False,
-            }
+                "condition": "path matches",
+                "value": "/foo",
+                "required": False,
+            },
         )
         if form.is_valid():
             form.save()
-            return redirect(
-                'wagtailflags:flag_index', name=form.instance.name
-            )
+            return redirect("wagtailflags:flag_index", name=form.instance.name)
     else:
         form = NewFlagForm()
 
     context = dict(form=form)
-    return render(request, 'wagtailflags/flags/create_flag.html', context)
+    return render(request, "wagtailflags/flags/create_flag.html", context)
 
 
 def flag_index(request, name):
@@ -47,37 +45,36 @@ def flag_index(request, name):
 
     # If there's a database boolean condition, fetch it and treat it as a
     # on/off switch
-    if 'enable' in request.GET or 'disable' in request.GET:
+    if "enable" in request.GET or "disable" in request.GET:
         db_boolean_condition = next(
             (
-                c for c in flag.conditions
-                if c.condition == 'boolean'
-                and getattr(c, 'obj', None) is not None
+                c
+                for c in flag.conditions
+                if c.condition == "boolean"
+                and getattr(c, "obj", None) is not None
             ),
-            None
+            None,
         )
 
         if db_boolean_condition is None:
             boolean_condition_obj = FlagState.objects.create(
-                name=name,
-                condition='boolean',
-                value='True'
+                name=name, condition="boolean", value="True"
             )
         else:
             boolean_condition_obj = db_boolean_condition.obj
 
-        if 'enable' in request.GET and not bool_enabled(flag):
+        if "enable" in request.GET and not bool_enabled(flag):
             boolean_condition_obj.value = True
-        elif 'disable' in request.GET and bool_enabled(flag):
+        elif "disable" in request.GET and bool_enabled(flag):
             boolean_condition_obj.value = False
 
         boolean_condition_obj.save()
-        return redirect('wagtailflags:flag_index', name=name)
+        return redirect("wagtailflags:flag_index", name=name)
 
     context = {
-        'flag': flag,
+        "flag": flag,
     }
-    return render(request, 'wagtailflags/flags/flag_index.html', context)
+    return render(request, "wagtailflags/flags/flag_index.html", context)
 
 
 def edit_condition(request, name, condition_pk=None):
@@ -91,26 +88,24 @@ def edit_condition(request, name, condition_pk=None):
     except FlagState.DoesNotExist:
         condition = None
 
-    if request.method == 'POST':
+    if request.method == "POST":
         form = FlagStateForm(
-            request.POST, initial={'name': name}, instance=condition
+            request.POST, initial={"name": name}, instance=condition
         )
         if form.is_valid():
             form.save()
-            return redirect(
-                'wagtailflags:flag_index', name=name
-            )
+            return redirect("wagtailflags:flag_index", name=name)
 
     else:
-        form = FlagStateForm(initial={'name': name}, instance=condition)
+        form = FlagStateForm(initial={"name": name}, instance=condition)
 
     context = {
-        'flag': flag,
-        'form': form,
-        'condition_str': str(condition),
-        'condition_pk': condition_pk,
+        "flag": flag,
+        "form": form,
+        "condition_str": str(condition),
+        "condition_pk": condition_pk,
     }
-    return render(request, 'wagtailflags/flags/edit_condition.html', context)
+    return render(request, "wagtailflags/flags/edit_condition.html", context)
 
 
 def delete_condition(request, name, condition_pk):
@@ -121,13 +116,13 @@ def delete_condition(request, name, condition_pk):
 
     condition = get_object_or_404(FlagState, pk=condition_pk)
 
-    if request.method == 'POST':
+    if request.method == "POST":
         condition.delete()
-        return redirect('wagtailflags:flag_index', name=name)
+        return redirect("wagtailflags:flag_index", name=name)
 
     context = {
-        'flag': flag,
-        'condition_str': str(condition),
-        'condition_pk': condition.pk,
+        "flag": flag,
+        "condition_str": str(condition),
+        "condition_pk": condition.pk,
     }
-    return render(request, 'wagtailflags/flags/delete_condition.html', context)
+    return render(request, "wagtailflags/flags/delete_condition.html", context)
