@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-install_requires = ["wagtail>=2.3,<2.9", "django-flags>=4.2,<5.0"]
+install_requires = ["wagtail>=2.3,<2.10", "django-flags>=4.2,<5.0"]
 
 testing_extras = ["coverage>=3.7.0"]
 
@@ -20,7 +20,8 @@ setup(
     extras_require={"testing": testing_extras},
     classifiers=[
         "Framework :: Django",
-        "Framework :: Django :: 3",
+        "Framework :: Django :: 1.11",
+        "Framework :: Django :: 2.2",
         "Framework :: Wagtail",
         "Framework :: Wagtail :: 2",
         "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
