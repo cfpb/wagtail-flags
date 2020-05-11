@@ -1,6 +1,6 @@
 from setuptools import find_packages, setup
 
-install_requires = ["wagtail>=2.3,<2.9", "django-flags>=4.2,<5.0"]
+install_requires = ["wagtail>=2.3,<2.10", "django-flags>=4.2,<5.0"]
 
 testing_extras = ["coverage>=3.7.0"]
 
@@ -13,7 +13,7 @@ setup(
     long_description=open("README.md", "r").read(),
     long_description_content_type="text/markdown",
     license="CC0",
-    version="4.2.0",
+    version="4.2.1",
     include_package_data=True,
     packages=find_packages(),
     install_requires=install_requires,
@@ -21,8 +21,6 @@ setup(
     classifiers=[
         "Framework :: Django",
         "Framework :: Django :: 1.11",
-        "Framework :: Django :: 2.0",
-        "Framework :: Django :: 2.1",
         "Framework :: Django :: 2.2",
         "Framework :: Wagtail",
         "Framework :: Wagtail :: 2",
