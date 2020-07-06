@@ -1,6 +1,7 @@
 from django.test import TestCase, override_settings
 
 from flags.sources import get_flags
+
 from wagtailflags.templatetags.wagtailflags_admin import disablable, enablable
 
 
