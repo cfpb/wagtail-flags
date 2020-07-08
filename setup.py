@@ -1,6 +1,9 @@
 from setuptools import find_packages, setup
 
-install_requires = ["wagtail>=2.3,<2.10", "django-flags>=4.2,<5.0"]
+install_requires = [
+    "wagtail~=2.0",
+    "django-flags>=4.2,<5.0",
+]
 
 testing_extras = ["coverage>=3.7.0"]
 
@@ -13,9 +16,10 @@ setup(
     long_description=open("README.md", "r").read(),
     long_description_content_type="text/markdown",
     license="CC0",
-    version="4.2.1",
+    version="4.2.2",
     include_package_data=True,
     packages=find_packages(),
+    python_requires=">=3",
     install_requires=install_requires,
     extras_require={"testing": testing_extras},
     classifiers=[
