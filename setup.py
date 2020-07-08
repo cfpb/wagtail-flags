@@ -16,10 +16,10 @@ setup(
     long_description=open("README.md", "r").read(),
     long_description_content_type="text/markdown",
     license="CC0",
-    version="4.2.2",
+    version="4.2.1",
     include_package_data=True,
     packages=find_packages(),
-    python_requires=">=3",
+    python_requires=">=3.6",
     install_requires=install_requires,
     extras_require={"testing": testing_extras},
     classifiers=[
