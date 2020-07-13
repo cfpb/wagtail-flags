@@ -3,6 +3,7 @@ from django.test import RequestFactory, TestCase
 from wagtail.core.models import Site
 
 from flags.conditions import RequiredForCondition
+
 from wagtailflags.conditions import site_condition
 
 

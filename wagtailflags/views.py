@@ -4,6 +4,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from flags.models import FlagState
 from flags.sources import get_flags
 from flags.templatetags.flags_debug import bool_enabled
+
 from wagtailflags.forms import FlagStateForm, NewFlagForm
 
 
