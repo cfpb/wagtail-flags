@@ -1,5 +1,6 @@
 from django.test import RequestFactory, TestCase
 
+import wagtail
 from wagtail.core.models import Site
 
 from flags.conditions import RequiredForCondition
@@ -12,7 +13,10 @@ class SiteConditionTestCase(TestCase):
         self.site = Site.objects.get(is_default_site=True)
         self.factory = RequestFactory()
         self.request = self.factory.get("/")
-        self.request.site = self.site
+        if wagtail.VERSION < (2, 9):
+            self.request.site = self.site
+        else:
+            Site.find_for_request(self.request)
 
     def test_site_valid_string(self):
         self.assertTrue(site_condition("localhost:80", request=self.request))
