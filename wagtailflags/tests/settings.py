@@ -1,7 +1,5 @@
 import os
 
-import django
-
 
 ALLOWED_HOSTS = ["*"]
 
@@ -41,32 +39,19 @@ WAGTAIL_APPS = (
     "wagtail.users",
 )
 
-WAGTAIL_MIDDLEWARE = ("wagtail.core.middleware.SiteMiddleware",)
-
 WAGTAILADMIN_RICH_TEXT_EDITORS = {
     "default": {"WIDGET": "wagtail.admin.rich_text.DraftailRichTextArea"},
     "custom": {"WIDGET": "wagtail.tests.testapp.rich_text.CustomRichTextArea"},
 }
 
-if django.VERSION >= (1, 10):  # pragma: no cover
-    MIDDLEWARE = (
-        "django.middleware.common.CommonMiddleware",
-        "django.contrib.sessions.middleware.SessionMiddleware",
-        "django.middleware.csrf.CsrfViewMiddleware",
-        "django.contrib.auth.middleware.AuthenticationMiddleware",
-        "django.contrib.messages.middleware.MessageMiddleware",
-        "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    ) + WAGTAIL_MIDDLEWARE
-else:  # pragma: no cover; fallback for Django >= 1.10
-    MIDDLEWARE_CLASSES = (
-        "django.middleware.common.CommonMiddleware",
-        "django.contrib.sessions.middleware.SessionMiddleware",
-        "django.middleware.csrf.CsrfViewMiddleware",
-        "django.contrib.auth.middleware.AuthenticationMiddleware",
-        "django.contrib.auth.middleware.SessionAuthenticationMiddleware",
-        "django.contrib.messages.middleware.MessageMiddleware",
-        "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    ) + WAGTAIL_MIDDLEWARE
+MIDDLEWARE = (
+    "django.middleware.common.CommonMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
+    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+)
 
 INSTALLED_APPS = (
     (
