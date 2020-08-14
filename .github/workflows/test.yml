@@ -32,22 +32,19 @@ jobs:
     strategy:
       matrix:
         toxenv:
+            - py36-dj22-wag23
             - py36-dj22-wag210
-            - py36-dj30-wag210
             - py36-dj31-wag210
             - py38-dj22-wag210
-            - py38-dj30-wag210
             - py38-dj31-wag210
         include:
-          - toxenv: py36-dj22-wag210
+          - toxenv: py36-dj22-wag23
             python-version: 3.6
-          - toxenv: py36-dj30-wag210
+          - toxenv: py36-dj22-wag210
             python-version: 3.6
           - toxenv: py36-dj31-wag210
             python-version: 3.6
           - toxenv: py38-dj22-wag210
-            python-version: 3.8
-          - toxenv: py38-dj30-wag210
             python-version: 3.8
           - toxenv: py38-dj31-wag210
             python-version: 3.8
