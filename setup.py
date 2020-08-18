@@ -2,7 +2,7 @@ from setuptools import find_packages, setup
 
 install_requires = [
     "wagtail>=2.3,<2.11",
-    "django-flags>=4.2,<5.0",
+    "django-flags>=4.2,<5.1",
 ]
 
 testing_extras = ["coverage>=3.7.0"]
