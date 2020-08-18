@@ -1,5 +1,6 @@
 from django.test import TestCase
 
+import wagtail
 from wagtail.tests.utils import WagtailTestUtils
 
 from flags.models import FlagState
@@ -25,6 +26,14 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
         self.assertContains(response, "DBONLY_FLAG")
         self.assertContains(response, "<b>enabled</b> when")
         self.assertContains(response, "<b>enabled</b> for")
+
+    def test_flags_index_wagtail210_header_action(self):
+        response = self.client.get("/admin/flags/")
+
+        if wagtail.VERSION >= (2, 10):  # pragma: no cover
+            self.assertTrue(response.context["wagtail_header_action"])
+        else:  # pragma: no cover
+            self.assertFalse(response.context["wagtail_header_action"])
 
     def test_flag_create(self):
         response = self.client.get("/admin/flags/create/")

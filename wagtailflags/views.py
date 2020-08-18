@@ -1,6 +1,8 @@
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 
+import wagtail
+
 from flags.models import FlagState
 from flags.sources import get_flags
 from flags.templatetags.flags_debug import bool_enabled
@@ -11,6 +13,8 @@ from wagtailflags.forms import FlagStateForm, NewFlagForm
 def index(request):
     context = {
         "flags": sorted(get_flags().values(), key=lambda x: x.name),
+        # Wagtail 2.10 changes "add_*" in the shared admin header to "action_*"
+        "wagtail_header_action": wagtail.VERSION >= (2, 10, 0),
     }
     return render(request, "wagtailflags/index.html", context)
 

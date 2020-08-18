@@ -13,10 +13,10 @@ class SiteConditionTestCase(TestCase):
         self.site = Site.objects.get(is_default_site=True)
         self.factory = RequestFactory()
         self.request = self.factory.get("/")
-        if wagtail.VERSION < (2, 9):
-            self.request.site = self.site
-        else:
+        if wagtail.VERSION >= (2, 9):  # pragma: no cover
             Site.find_for_request(self.request)
+        else:  # pragma: no cover
+            self.request.site = self.site
 
     def test_site_valid_string(self):
         self.assertTrue(site_condition("localhost:80", request=self.request))
