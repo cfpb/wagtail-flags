@@ -9,8 +9,6 @@
         {% if form.instance %}Edit {{ form.instance.condition }}{% else %}Create condition{% endif %}
     </h2>
 
-    {{ form.errors }}
-
     {% if condition_pk %}
     <form class="nice-padding" method="POST" action="{% url 'wagtailflags:edit_condition' flag.name condition_pk %}">
     {% else %}

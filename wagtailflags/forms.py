@@ -1,6 +1,6 @@
 from django import forms
 
-from flags.conditions import get_conditions
+from flags.forms import FlagStateForm as DjangoFlagsFlagStateForm
 from flags.models import FlagState
 from flags.sources import get_flags
 
@@ -29,27 +29,10 @@ class NewFlagForm(forms.ModelForm):
         fields = ("name",)
 
 
-class FlagStateForm(forms.ModelForm):
+class FlagStateForm(DjangoFlagsFlagStateForm):
     name = forms.CharField(
         label="Flag", required=True, disabled=True, widget=forms.HiddenInput(),
     )
-    condition = forms.ChoiceField(label="Condition", required=True)
-    value = forms.CharField(label="Expected value", required=True)
-    required = forms.BooleanField(
-        label="Required",
-        required=False,
-        help_text=(
-            'All conditions marked "required" must be met to enable '
-            "the flag"
-        ),
-    )
-
-    def __init__(self, *args, **kwargs):
-        super(FlagStateForm, self).__init__(*args, **kwargs)
-
-        self.fields["condition"].choices = [
-            (c, c) for c in sorted(get_conditions()) if c != "boolean"
-        ]
 
     class Meta:
         model = FlagState
