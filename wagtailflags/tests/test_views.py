@@ -139,7 +139,7 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
 
     def test_edit_flag_condition(self):
         condition_obj = FlagState.objects.create(
-            name="DBONLY_FLAG", condition="user", value="liberty"
+            name="DBONLY_FLAG", condition="boolean", value="true"
         )
         response = self.client.get(
             "/admin/flags/DBONLY_FLAG/{}/".format(condition_obj.pk)
@@ -147,8 +147,8 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
         self.assertEqual(response.status_code, 200)
 
         params = {
-            "condition": "user",
-            "value": "justice",
+            "condition": "boolean",
+            "value": "true",
         }
 
         response = self.client.post(
@@ -156,7 +156,7 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
         )
         self.assertRedirects(response, "/admin/flags/DBONLY_FLAG/")
         self.assertEqual(
-            FlagState.objects.get(pk=condition_obj.pk).value, "justice"
+            FlagState.objects.get(pk=condition_obj.pk).value, "true"
         )
 
     def test_delete_flag_condition_nonexistent_flag_raises_404(self):
@@ -167,7 +167,7 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
 
     def test_delete_flag_condition(self):
         condition_obj = FlagState.objects.create(
-            name="DBONLY_FLAG", condition="user", value="liberty"
+            name="DBONLY_FLAG", condition="boolean", value="true"
         )
         self.assertEqual(len(FlagState.objects.all()), 2)
         response = self.client.get(
