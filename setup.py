@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 install_requires = [
-    "wagtail>=2.3,<2.11",
+    "wagtail>=2.7,<2.11",
     "django-flags>=4.2,<5.1",
 ]
 
@@ -16,7 +16,7 @@ setup(
     long_description=open("README.md", "r", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     license="CC0",
-    version="4.2.3",
+    version="5.0.0",
     include_package_data=True,
     packages=find_packages(),
     python_requires=">=3.6",
