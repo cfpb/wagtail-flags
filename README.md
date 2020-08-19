@@ -1,6 +1,6 @@
 # Wagtail-Flags
 
-[![Build Status](https://travis-ci.org/cfpb/wagtail-flags.svg?branch=master)](https://travis-ci.org/cfpb/wagtail-flags)
+[![Build Status](https://github.com/cfpb/wagtail-flags/workflows/test/badge.svg)](https://github.com/cfpb/wagtail-flags/actions?query=workflow%3Atest)
 [![Coverage Status](https://coveralls.io/repos/github/cfpb/wagtail-flags/badge.svg?branch=master)](https://coveralls.io/github/cfpb/wagtail-flags?branch=master)
 
 Feature flags allow you to toggle functionality based on configurable conditions. 
