@@ -6,8 +6,8 @@ from flags.conditions import RequiredForCondition, register
 
 @register("site")
 def site_condition(site_str, request=None, **kwargs):
-    """ Does the requests's Wagtail Site match the given site?
-    site_str should be 'hostname:port', or 'hostname [default]'. """
+    """Does the requests's Wagtail Site match the given site?
+    site_str should be 'hostname:port', or 'hostname [default]'."""
     if request is None:
         raise RequiredForCondition(
             "request is required for condition " "'site'"

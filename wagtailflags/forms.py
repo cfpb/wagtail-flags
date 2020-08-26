@@ -31,7 +31,10 @@ class NewFlagForm(forms.ModelForm):
 
 class FlagStateForm(DjangoFlagsFlagStateForm):
     name = forms.CharField(
-        label="Flag", required=True, disabled=True, widget=forms.HiddenInput(),
+        label="Flag",
+        required=True,
+        disabled=True,
+        widget=forms.HiddenInput(),
     )
 
     class Meta:
