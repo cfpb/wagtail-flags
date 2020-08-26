@@ -20,9 +20,9 @@ def index(request):
 
 
 def create_flag(request):
-    """ Create a new flag.
+    """Create a new flag.
     This will add a FlagState object with a custom name and a boolean: False
-    condition """
+    condition"""
     if request.method == "POST":
         form = NewFlagForm(
             request.POST,

@@ -64,7 +64,10 @@ INSTALLED_APPS = (
         "taggit",
     )
     + WAGTAIL_APPS
-    + ("flags", "wagtailflags",)
+    + (
+        "flags",
+        "wagtailflags",
+    )
 )
 
 STATIC_ROOT = "/tmp/static/"
