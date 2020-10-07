@@ -32,6 +32,11 @@ def register_flag_admin_urls():
         re_path(r"^create/$", views.create_flag, name="create_flag"),
         re_path(r"^(?P<name>[\w\-]+)/$", views.flag_index, name="flag_index"),
         re_path(
+            r"^(?P<name>[\w\-]+)/delete/$",
+            views.delete_flag,
+            name="delete_flag",
+        ),
+        re_path(
             r"^(?P<name>[\w\-]+)/create/$",
             views.edit_condition,
             name="create_condition",

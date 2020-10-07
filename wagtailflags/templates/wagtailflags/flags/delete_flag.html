@@ -1,0 +1,17 @@
+{% extends "wagtailadmin/base.html" %}
+{% load i18n feature_flags %}
+{% block titletag %}{% trans "Delete" as delete_str %} {{ flag.name }}{% endblock %}
+
+{% block content %}
+    {% trans "Delete flag:" as delete_str %}
+    {% include "wagtailadmin/shared/header.html" with title=delete_str subtitle=flag.name %}
+
+    <form class="nice-padding" method="POST" action="{% url 'wagtailflags:delete_flag' flag.name %}">
+      {% csrf_token %}
+
+      <p>Are you sure you want to delete this flag and all its conditions?</p>
+      <input type="submit" value="Yes, delete it" class="button serious">
+
+      <a href="{% url 'wagtailflags:flag_index' flag.name %}" class="button button-secondary">No, don't delete it</a>
+    </form>
+{% endblock %}
