@@ -1,7 +1,7 @@
 from setuptools import find_packages, setup
 
 install_requires = [
-    "wagtail>=2.7,<2.11",
+    "wagtail>=2.7,<3",
     "django-flags>=4.2,<5.1",
 ]
 
