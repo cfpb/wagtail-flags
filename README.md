@@ -14,6 +14,7 @@ Wagtail-Flags adds a Wagtail admin UI and Wagtail Site-based condition on top of
 - [Installation](#installation)
 - [Usage](#usage)
 - [Extended conditions](#extended-conditions)
+- [Signals](#signals)
 - [Getting help](#getting-help)
 - [Getting involved](#getting-involved)
 - [Licensing](#licensing)
@@ -104,6 +105,31 @@ FLAGS = {
     ],
 }
 ```
+
+## Signals
+
+Wagtail-Flags includes  `flag_enabled` and `flag_disabled` signals that can be received when the "Enable for all requests" and "Disable for all requests" buttons are pressed in the admin. This is intended to enable things like front-end cache invalidation.
+
+```python
+from django.dispatch import receiver
+
+from wagtail.contrib.frontend_cache.utils import purge_url_from_cache
+
+from wagtailflags.signals import flag_disabled, flag_enabled
+
+
+@receiver(flag_enabled)
+def purge_on_flag_enabled(sender, **kwargs):
+    flag_name = kwargs["flag_name"]
+    purge_url_from_cache(...)
+
+@receiver(flag_disabled)
+def purge_on_flag_disabled(sender, **kwargs):
+    flag_name = kwargs["flag_name"]
+    purge_url_from_cache(...)
+```
+
+**Please note:** These signals are only sent for manual presses of the "Enable for all requests" and "Disable for all requests" buttons in the admin. Other flag conditions may vary within and only be valid for a specific request cycle.
 
 ## Getting help
 
