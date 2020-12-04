@@ -24,7 +24,8 @@ def disablable(flag):
     """Return true if a flag is disablable by Wagtail-Flags.
 
     A flag is disablable by Wagtail-Flags if it has a required boolean
-    condition and that boolean condition is True."""
+    condition and that boolean condition is True.
+    """
     return not any(
         c.required for c in flag.conditions if c.condition == "boolean"
     ) and bool_enabled(flag)
@@ -34,8 +35,9 @@ def disablable(flag):
 def deletable(flag):
     """Return true if a flag is deletable by Wagtail-Flags.
 
-    A flag is deletable by Wagtail-Flags if it is database-only, which means it
-    will have any conditions that are not DatabaseCondition."""
-    return (len(flag.conditions) > 0) and not any(
-        c for c in flag.conditions if not isinstance(c, DatabaseCondition)
+    A flag is deletable by Wagtail-Flags if it is database-only, which means
+    all of its conditions are type DatabaseCondition.
+    """
+    return flag.conditions and all(
+        isinstance(c, DatabaseCondition) for c in flag.conditions
     )

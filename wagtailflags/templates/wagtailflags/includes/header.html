@@ -7,7 +7,7 @@
   {% if flag|deletable %}
     {% if wagtail_header_action %}
       {% url 'wagtailflags:delete_flag' flag.name as delete_link %}
-      {# Wagtail 2.10 changes "add_*" in the shared admin header to "action_*" #}
+      {# Wagtail 2.10 adds "action_*", which we need to enable the "Delete flag" button in the header. #}
       {% include "wagtailadmin/shared/header.html" with title=title action_icon="bin" action_text='Delete flag' action_url=delete_link %}
     {% endif %}
   {% else %}
