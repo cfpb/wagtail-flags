@@ -1,8 +1,13 @@
 from django.test import TestCase, override_settings
 
+from flags.models import FlagState
 from flags.sources import get_flags
 
-from wagtailflags.templatetags.wagtailflags_admin import disablable, enablable
+from wagtailflags.templatetags.wagtailflags_admin import (
+    deletable,
+    disablable,
+    enablable,
+)
 
 
 class TestWagtailFlagsAdminTemplateTags(TestCase):
@@ -35,3 +40,14 @@ class TestWagtailFlagsAdminTemplateTags(TestCase):
     def test_disablable_enabled_required(self):
         flag = get_flags().get("MYFLAG")
         self.assertFalse(disablable(flag))
+
+    @override_settings(FLAGS={"MYFLAG": [("boolean", False)], "EMPTYFLAG": []})
+    def test_deletable(self):
+        FlagState.objects.create(
+            name="DBFLAG",
+            condition="boolean",
+            value="True",
+        )
+        self.assertFalse(deletable(get_flags().get("MYFLAG")))
+        self.assertFalse(deletable(get_flags().get("EMPTYFLAG")))
+        self.assertTrue(deletable(get_flags().get("DBFLAG")))

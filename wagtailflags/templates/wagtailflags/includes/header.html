@@ -1,13 +1,22 @@
+{% load wagtailflags_admin %}
 {% if flag %}
-<ul class="breadcrumb flags-breadcrumb">
-  <li><a href="{% url 'wagtailflags:list' %}">Flags</a></li>
-  <li>{{ title }}</li>
-</ul>
-{% include "wagtailadmin/shared/header.html" with title=title icon=icon %}
+  <ul class="breadcrumb flags-breadcrumb">
+    <li><a href="{% url 'wagtailflags:list' %}">Flags</a></li>
+    <li>{{ title }}</li>
+  </ul>
+  {% if flag|deletable %}
+    {% if wagtail_header_action %}
+      {% url 'wagtailflags:delete_flag' flag.name as delete_link %}
+      {# Wagtail 2.10 adds "action_*", which we need to enable the "Delete flag" button in the header. #}
+      {% include "wagtailadmin/shared/header.html" with title=title action_icon="bin" action_text='Delete flag' action_url=delete_link %}
+    {% endif %}
+  {% else %}
+    {% include "wagtailadmin/shared/header.html" with title=title icon=icon %}
+  {% endif %}
 {% elif wagtail_header_action %}
-{# Wagtail 2.10 changes "add_*" in the shared admin header to "action_*" #}
-{% url 'wagtailflags:create_flag' as add_link %}
-{% include "wagtailadmin/shared/header.html" with title=title action_icon=icon action_text='Add flag' action_url=add_link %}
+  {# Wagtail 2.10 changes "add_*" in the shared admin header to "action_*" #}
+  {% url 'wagtailflags:create_flag' as add_link %}
+  {% include "wagtailadmin/shared/header.html" with title=title action_icon=icon action_text='Add flag' action_url=add_link %}
 {% else %}
-{% include "wagtailadmin/shared/header.html" with title=title icon=icon add_text='Add flag' add_link='wagtailflags:create_flag' %}
+  {% include "wagtailadmin/shared/header.html" with title=title icon=icon add_text='Add flag' add_link='wagtailflags:create_flag' %}
 {% endif %}

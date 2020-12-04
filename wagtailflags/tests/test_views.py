@@ -1,6 +1,5 @@
 from django.test import TestCase
 
-import wagtail
 from wagtail.tests.utils import WagtailTestUtils
 
 from flags.models import FlagState
@@ -27,14 +26,6 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
         self.assertContains(response, "<b>enabled</b> when")
         self.assertContains(response, "<b>enabled</b> for")
 
-    def test_flags_index_wagtail210_header_action(self):
-        response = self.client.get("/admin/flags/")
-
-        if wagtail.VERSION >= (2, 10):  # pragma: no cover
-            self.assertTrue(response.context["wagtail_header_action"])
-        else:  # pragma: no cover
-            self.assertFalse(response.context["wagtail_header_action"])
-
     def test_flag_create(self):
         response = self.client.get("/admin/flags/create/")
         self.assertEqual(response.status_code, 200)
@@ -57,6 +48,25 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
             "/admin/flags/create/", {"name": "DBONLY_FLAG"}
         )
         self.assertContains(response, "Flag named DBONLY_FLAG already exists")
+
+    def test_flag_delete(self):
+        response = self.client.get("/admin/flags/DBONLY_FLAG/delete/")
+        self.assertEqual(response.status_code, 200)
+
+        response = self.client.post("/admin/flags/DBONLY_FLAG/delete/")
+
+        self.assertRedirects(response, "/admin/flags/")
+        self.assertEqual(FlagState.objects.count(), 0)
+
+    def test_flag_delete_nonexistent(self):
+        response = self.client.get(
+            "/admin/flags/THIS_FLAG_DOES_NOT_EXIST/delete/"
+        )
+        self.assertEqual(response.status_code, 404)
+
+    def test_flag_delete_not_deletable(self):
+        response = self.client.get("/admin/flags/FLAG_ENABLED/delete/")
+        self.assertEqual(response.status_code, 403)
 
     def test_flag_index_nonexistent_flag_raises_404(self):
         response = self.client.get("/admin/flags/THIS_FLAG_DOES_NOT_EXIST/")

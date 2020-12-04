@@ -1,4 +1,4 @@
-from django.http import Http404
+from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 
 import wagtail
@@ -9,6 +9,7 @@ from flags.templatetags.flags_debug import bool_enabled
 
 from wagtailflags.forms import FlagStateForm, NewFlagForm
 from wagtailflags.signals import flag_disabled, flag_enabled
+from wagtailflags.templatetags.wagtailflags_admin import deletable
 
 
 def index(request):
@@ -41,6 +42,27 @@ def create_flag(request):
 
     context = dict(form=form)
     return render(request, "wagtailflags/flags/create_flag.html", context)
+
+
+def delete_flag(request, name):
+    """ Delete a database flag. """
+    flag = get_flags().get(name)
+
+    if not flag:
+        raise Http404
+
+    if not deletable(flag):
+        return HttpResponseForbidden(name)
+
+    if request.method == "POST":
+        FlagState.objects.filter(name=name).delete()
+        return redirect("wagtailflags:list")
+
+    context = {
+        "flag": flag,
+        "wagtail_header_action": wagtail.VERSION >= (2, 10, 0),
+    }
+    return render(request, "wagtailflags/flags/delete_flag.html", context)
 
 
 def flag_index(request, name):
@@ -81,6 +103,7 @@ def flag_index(request, name):
 
     context = {
         "flag": flag,
+        "wagtail_header_action": wagtail.VERSION >= (2, 10, 0),
     }
     return render(request, "wagtailflags/flags/flag_index.html", context)
 
