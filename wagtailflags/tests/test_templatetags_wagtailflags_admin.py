@@ -41,7 +41,7 @@ class TestWagtailFlagsAdminTemplateTags(TestCase):
         flag = get_flags().get("MYFLAG")
         self.assertFalse(disablable(flag))
 
-    @override_settings(FLAGS={"MYFLAG": [("boolean", False)]})
+    @override_settings(FLAGS={"MYFLAG": [("boolean", False)], "EMPTYFLAG": []})
     def test_deletable(self):
         FlagState.objects.create(
             name="DBFLAG",
@@ -49,4 +49,5 @@ class TestWagtailFlagsAdminTemplateTags(TestCase):
             value="True",
         )
         self.assertFalse(deletable(get_flags().get("MYFLAG")))
+        self.assertFalse(deletable(get_flags().get("EMPTYFLAG")))
         self.assertTrue(deletable(get_flags().get("DBFLAG")))

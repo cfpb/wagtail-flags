@@ -36,6 +36,6 @@ def deletable(flag):
 
     A flag is deletable by Wagtail-Flags if it is database-only, which means it
     will have any conditions that are not DatabaseCondition."""
-    return not any(
+    return (len(flag.conditions) > 0) and not any(
         c for c in flag.conditions if not isinstance(c, DatabaseCondition)
     )
