@@ -55,8 +55,7 @@ def delete_flag(request, name):
         return HttpResponseForbidden(request.method)
 
     if request.method == "POST":
-        for condition in flag.conditions:
-            condition.obj.delete()
+        FlagState.objects.filter(name=name).delete()
         return redirect("wagtailflags:list")
 
     context = {
