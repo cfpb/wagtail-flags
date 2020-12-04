@@ -8,6 +8,7 @@ from flags.sources import get_flags
 from flags.templatetags.flags_debug import bool_enabled
 
 from wagtailflags.forms import FlagStateForm, NewFlagForm
+from wagtailflags.signals import flag_disabled, flag_enabled
 
 
 def index(request):
@@ -70,8 +71,10 @@ def flag_index(request, name):
 
         if "enable" in request.GET and not bool_enabled(flag):
             boolean_condition_obj.value = True
+            flag_enabled.send(sender=flag_index, flag_name=flag.name)
         elif "disable" in request.GET and bool_enabled(flag):
             boolean_condition_obj.value = False
+            flag_disabled.send(sender=flag_index, flag_name=flag.name)
 
         boolean_condition_obj.save()
         return redirect("wagtailflags:flag_index", name=name)
