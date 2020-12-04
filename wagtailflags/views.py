@@ -52,7 +52,7 @@ def delete_flag(request, name):
         raise Http404
 
     if not deletable(flag):
-        return HttpResponseForbidden(flag)
+        return HttpResponseForbidden(name)
 
     if request.method == "POST":
         FlagState.objects.filter(name=name).delete()
