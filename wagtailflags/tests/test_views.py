@@ -66,7 +66,7 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
 
     def test_flag_delete_not_deletable(self):
         response = self.client.get("/admin/flags/FLAG_ENABLED/delete/")
-        self.assertEqual(response.status_code, 405)
+        self.assertEqual(response.status_code, 403)
 
     def test_flag_index_nonexistent_flag_raises_404(self):
         response = self.client.get("/admin/flags/THIS_FLAG_DOES_NOT_EXIST/")

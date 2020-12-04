@@ -1,4 +1,4 @@
-from django.http import Http404, HttpResponseNotAllowed
+from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 
 import wagtail
@@ -52,7 +52,7 @@ def delete_flag(request, name):
         raise Http404
 
     if not deletable(flag):
-        return HttpResponseNotAllowed(request.method)
+        return HttpResponseForbidden(request.method)
 
     if request.method == "POST":
         for condition in flag.conditions:
