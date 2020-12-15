@@ -12,11 +12,18 @@ from wagtailflags.signals import flag_disabled, flag_enabled
 from wagtailflags.templatetags.wagtailflags_admin import deletable
 
 
+wagtailadmin_feature_context = {
+    # Wagtail 2.10 changes "add_*" in the shared admin header to "action_*"
+    "wagtail_header_action": wagtail.VERSION >= (2, 10, 0),
+    # Wagtail 2.11 changes the breadcrumb icons to SVGs
+    "wagtail_svg_crumbs": wagtail.VERSION >= (2, 11, 0),
+}
+
+
 def index(request):
     context = {
         "flags": sorted(get_flags().values(), key=lambda x: x.name),
-        # Wagtail 2.10 changes "add_*" in the shared admin header to "action_*"
-        "wagtail_header_action": wagtail.VERSION >= (2, 10, 0),
+        **wagtailadmin_feature_context,
     }
     return render(request, "wagtailflags/index.html", context)
 
@@ -40,7 +47,7 @@ def create_flag(request):
     else:
         form = NewFlagForm()
 
-    context = dict(form=form)
+    context = dict(form=form, **wagtailadmin_feature_context)
     return render(request, "wagtailflags/flags/create_flag.html", context)
 
 
@@ -58,10 +65,7 @@ def delete_flag(request, name):
         FlagState.objects.filter(name=name).delete()
         return redirect("wagtailflags:list")
 
-    context = {
-        "flag": flag,
-        "wagtail_header_action": wagtail.VERSION >= (2, 10, 0),
-    }
+    context = {"flag": flag, **wagtailadmin_feature_context}
     return render(request, "wagtailflags/flags/delete_flag.html", context)
 
 
@@ -101,10 +105,7 @@ def flag_index(request, name):
         boolean_condition_obj.save()
         return redirect("wagtailflags:flag_index", name=name)
 
-    context = {
-        "flag": flag,
-        "wagtail_header_action": wagtail.VERSION >= (2, 10, 0),
-    }
+    context = {"flag": flag, **wagtailadmin_feature_context}
     return render(request, "wagtailflags/flags/flag_index.html", context)
 
 
@@ -135,6 +136,7 @@ def edit_condition(request, name, condition_pk=None):
         "form": form,
         "condition_str": str(condition),
         "condition_pk": condition_pk,
+        **wagtailadmin_feature_context,
     }
     return render(request, "wagtailflags/flags/edit_condition.html", context)
 
@@ -155,5 +157,6 @@ def delete_condition(request, name, condition_pk):
         "flag": flag,
         "condition_str": str(condition),
         "condition_pk": condition.pk,
+        **wagtailadmin_feature_context,
     }
     return render(request, "wagtailflags/flags/delete_condition.html", context)

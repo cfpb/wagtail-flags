@@ -1,5 +1,7 @@
 from django import template
 
+import wagtail
+
 from flags.sources import DatabaseCondition
 from flags.templatetags.flags_debug import bool_enabled
 
@@ -41,3 +43,14 @@ def deletable(flag):
     return flag.conditions and all(
         isinstance(c, DatabaseCondition) for c in flag.conditions
     )
+
+
+# Wagtail 2.10 adds the `icon` template tag, and Wagtail 2.11 uses it for
+# breadcrumbs. To support `icon` in our templates in 2.11+ and continue to
+# support Wagtail < 2.10, we define a placeholder here that will not be used
+# because we feature-fence its actual use at render-time.
+if wagtail.VERSION < (2, 10, 0):  # pragma: no cover
+
+    @register.simple_tag
+    def icon(name=None, class_name=None, title=None, wrapped=False):
+        pass
