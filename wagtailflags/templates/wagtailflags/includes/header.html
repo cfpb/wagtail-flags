@@ -2,8 +2,8 @@
 
 {% if flag %}
   <ul class="breadcrumb flags-breadcrumb">
-    <li><a href="{% url 'wagtailflags:list' %}">Flags</a></li>
-    <li>{{ title }}</li>
+      <li><a href="{% url 'wagtailflags:list' %}"><span class="title">Flags</span>{% icon name="arrow-right" class_name="arrow_right_icon" %}</a></li>
+      <li><a href="#"><span class="title">{{ title }}</span></a></li>
   </ul>
 
   {% if flag|deletable %}
