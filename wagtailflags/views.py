@@ -1,8 +1,6 @@
 from django.http import Http404, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 
-import wagtail
-
 from flags.models import FlagState
 from flags.sources import get_flags
 from flags.templatetags.flags_debug import bool_enabled
@@ -15,8 +13,6 @@ from wagtailflags.templatetags.wagtailflags_admin import deletable
 def index(request):
     context = {
         "flags": sorted(get_flags().values(), key=lambda x: x.name),
-        # Wagtail 2.10 changes "add_*" in the shared admin header to "action_*"
-        "wagtail_header_action": wagtail.VERSION >= (2, 10, 0),
     }
     return render(request, "wagtailflags/index.html", context)
 
@@ -60,7 +56,6 @@ def delete_flag(request, name):
 
     context = {
         "flag": flag,
-        "wagtail_header_action": wagtail.VERSION >= (2, 10, 0),
     }
     return render(request, "wagtailflags/flags/delete_flag.html", context)
 
@@ -103,7 +98,6 @@ def flag_index(request, name):
 
     context = {
         "flag": flag,
-        "wagtail_header_action": wagtail.VERSION >= (2, 10, 0),
     }
     return render(request, "wagtailflags/flags/flag_index.html", context)
 
