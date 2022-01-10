@@ -13,16 +13,16 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v1
         with:
-          python-version: 3.8
+          python-version: 3.9
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install tox
-  
+
       - name: Run tox -e lint
         run: tox
-        env: 
+        env:
           TOXENV: lint
 
   test:
@@ -34,23 +34,22 @@ jobs:
         toxenv:
             - py36-dj22-wag211
             - py36-dj22-waglatest
-            - py36-dj31-waglatest
-            - py38-dj22-wag211
-            - py38-dj22-waglatest
-            - py38-dj31-waglatest
+            - py39-dj22-wag211
+            - py39-dj22-waglatest
+            - py39-dj32-waglatest
         include:
           - toxenv: py36-dj22-wag211
             python-version: 3.6
           - toxenv: py36-dj22-waglatest
             python-version: 3.6
-          - toxenv: py36-dj31-waglatest
-            python-version: 3.6
-          - toxenv: py38-dj22-wag211
-            python-version: 3.8
-          - toxenv: py38-dj22-waglatest
-            python-version: 3.8
-          - toxenv: py38-dj31-waglatest
-            python-version: 3.8
+          - toxenv: py39-dj22-waglatest
+            python-version: 3.9
+          - toxenv: py39-dj22-wag211
+            python-version: 3.9
+          - toxenv: py39-dj22-waglatest
+            python-version: 3.9
+          - toxenv: py39-dj32-waglatest
+            python-version: 3.9
 
     steps:
       - uses: actions/checkout@v1
@@ -69,6 +68,6 @@ jobs:
         run: |
             tox
             coveralls
-        env: 
+        env:
           TOXENV: ${{ matrix.toxenv }}
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
