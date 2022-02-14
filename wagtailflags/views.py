@@ -41,7 +41,7 @@ def create_flag(request):
 
 
 def delete_flag(request, name):
-    """ Delete a database flag. """
+    """Delete a database flag."""
     flag = get_flags().get(name)
 
     if not flag:
