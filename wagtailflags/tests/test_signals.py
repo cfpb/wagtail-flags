@@ -2,9 +2,8 @@ from unittest import mock
 
 from django.test import TestCase
 
-from wagtail.tests.utils import WagtailTestUtils
-
 from flags.models import FlagState
+from wagtail.tests.utils import WagtailTestUtils
 
 from wagtailflags.signals import flag_disabled, flag_enabled
 

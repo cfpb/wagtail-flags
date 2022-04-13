@@ -11,7 +11,8 @@ from wagtailflags import views
 try:  # pragma: no cover; >= 2.0
     from django.urls import include, re_path, reverse
 except ImportError:  # pragma: no cover; fallback for Django < 2.0
-    from django.conf.urls import include, url as re_path
+    from django.conf.urls import include
+    from django.conf.urls import url as re_path
     from django.core.urlresolvers import reverse
 
 
