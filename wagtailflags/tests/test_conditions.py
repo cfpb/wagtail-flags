@@ -1,8 +1,9 @@
 from django.test import RequestFactory, TestCase
 
 import wagtail
-from flags.conditions import RequiredForCondition
 from wagtail.core.models import Site
+
+from flags.conditions import RequiredForCondition
 
 from wagtailflags.conditions import site_condition
 
