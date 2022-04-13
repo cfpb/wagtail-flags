@@ -26,10 +26,12 @@ line_length = 79
 lines_after_imports = 2
 skip = [".tox", "migrations", ".venv", "venv"]
 known_django = ["django"]
+known_wagtail = ["wagtail"]
 default_section = "THIRDPARTY"
 sections = [
     "STDLIB",
     "DJANGO",
+    "WAGTAIL",
     "THIRDPARTY",
     "FIRSTPARTY",
     "LOCALFOLDER"
