@@ -4,6 +4,7 @@ import wagtail
 
 ALLOWED_HOSTS = ["*"]
 
+USE_TZ = True
 SECRET_KEY = "not needed"
 
 ROOT_URLCONF = "wagtailflags.tests.urls"
