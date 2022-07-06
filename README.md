@@ -4,7 +4,7 @@
 [![Coverage Status](https://coveralls.io/repos/github/cfpb/wagtail-flags/badge.svg?branch=master)](https://coveralls.io/github/cfpb/wagtail-flags?branch=master)
 [![Ethical open source](https://img.shields.io/badge/open-ethical-%234baaaa)](https://ethicalsource.dev/definition/)
 
-Feature flags allow you to toggle functionality based on configurable conditions. 
+Feature flags allow you to toggle functionality based on configurable conditions.
 
 Wagtail-Flags adds a Wagtail admin UI and Wagtail Site-based condition on top of [Django-Flags](https://github.com/cfpb/django-flags). For a more complete overview of feature flags and how to use them, please see the [Django-Flags documentation](https://cfpb.github.io/django-flags).
 
@@ -23,9 +23,9 @@ Wagtail-Flags adds a Wagtail admin UI and Wagtail Site-based condition on top of
 ## Dependencies
 
 - Python 3.6+
-- Django 2.2 (LTS), 3.1 (current)
-- Django-Flags 4.2 
-- Wagtail 2.11 (LTS), <3
+- Django 3.2 (LTS), 4.0 (current)
+- Django-Flags 4.2
+- Wagtail 2.15 (LTS), 3.0
 
 It should be compatible at all intermediate versions, as well.
 If you find that it is not, please [file an issue](https://github.com/cfpb/wagtail-flags/issues/new).
@@ -70,7 +70,7 @@ Then use the flag in a Django template (`mytemplate.html`):
 
 {% if my_flag %}
   <div class="flagged-banner">
-    I’m the result of a feature flag.   
+    I’m the result of a feature flag.
   </div>
 {% endif %}
 ```
