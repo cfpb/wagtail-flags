@@ -2,6 +2,7 @@ import os
 
 import wagtail
 
+
 ALLOWED_HOSTS = ["*"]
 
 USE_TZ = True
