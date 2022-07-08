@@ -1,5 +1,5 @@
 {% extends "wagtailadmin/base.html" %}
-{% load i18n %}
+{% load i18n wagtailadmin_tags %}
 {% block titletag %}Create a flag{% endblock %}
 
 {% block content %}
@@ -31,7 +31,7 @@
             </li>
             <li class="actions">
                 <input class="button action-save button-longrunning" type="submit" value="Save flag" />
-                <a class="button bicolor icon icon-cog" href="{% url 'wagtailflags:list' %}">Back to flags</a>
+                <a class="button bicolor button--icon" href="{% url 'wagtailflags:list' %}">{% icon name="cog" wrapped=1 %} Back to flags</a>
             </li>
         </ul>
     </form>

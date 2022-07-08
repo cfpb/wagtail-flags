@@ -8,12 +8,12 @@ jobs:
     name: lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.9
+          python-version: "3.10"
 
       - name: Install dependencies
         run: |
@@ -32,30 +32,29 @@ jobs:
     strategy:
       matrix:
         toxenv:
-            - py36-dj22-wag211
-            - py36-dj22-waglatest
-            - py39-dj22-wag211
-            - py39-dj22-waglatest
-            - py39-dj32-waglatest
+          # Legacy versions
+          - py39-dj32-wag215
+
+          # Current and latest versions
+          - py310-dj32-wag30
+          - py310-dj40-wag30
+          - py310-dj40-waglatest
+
         include:
-          - toxenv: py36-dj22-wag211
-            python-version: 3.6
-          - toxenv: py36-dj22-waglatest
-            python-version: 3.6
-          - toxenv: py39-dj22-waglatest
-            python-version: 3.9
-          - toxenv: py39-dj22-wag211
-            python-version: 3.9
-          - toxenv: py39-dj22-waglatest
-            python-version: 3.9
-          - toxenv: py39-dj32-waglatest
-            python-version: 3.9
+          - toxenv: py39-dj32-wag215
+            python-version: "3.9"
+          - toxenv: py310-dj32-wag30
+            python-version: "3.10"
+          - toxenv: py310-dj40-wag30
+            python-version: "3.10"
+          - toxenv: py310-dj40-waglatest
+            python-version: "3.10"
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v1
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
 
@@ -67,7 +66,39 @@ jobs:
       - name: Run tox
         run: |
             tox
-            coveralls
         env:
           TOXENV: ${{ matrix.toxenv }}
-          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+
+      - name: Store test coverage
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage
+          path: .coverage.*
+
+  coverage:
+    name: coverage
+    runs-on: ubuntu-latest
+    needs:
+      - test
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install tox
+      - name: Retrieve test coverage
+        uses: actions/download-artifact@v2
+        with:
+          name: coverage
+
+      - name: Check coverage
+        run: tox -e coverage

@@ -1,8 +1,11 @@
 import os
 
+import wagtail
+
 
 ALLOWED_HOSTS = ["*"]
 
+USE_TZ = True
 SECRET_KEY = "not needed"
 
 ROOT_URLCONF = "wagtailflags.tests.urls"
@@ -30,9 +33,7 @@ WAGTAIL_APPS = (
     "wagtail.contrib.forms",
     "wagtail.contrib.modeladmin",
     "wagtail.contrib.settings",
-    "wagtail.tests.testapp",
     "wagtail.admin",
-    "wagtail.core",
     "wagtail.documents",
     "wagtail.images",
     "wagtail.sites",
@@ -41,8 +42,25 @@ WAGTAIL_APPS = (
 
 WAGTAILADMIN_RICH_TEXT_EDITORS = {
     "default": {"WIDGET": "wagtail.admin.rich_text.DraftailRichTextArea"},
-    "custom": {"WIDGET": "wagtail.tests.testapp.rich_text.CustomRichTextArea"},
 }
+
+# Wagtail 3.0 moves testapp from wagtail.tests to wagtail.test
+if wagtail.VERSION >= (3, 0, 0):  # pragma: no cover
+    WAGTAIL_APPS += (
+        "wagtail",
+        "wagtail.test.testapp",
+    )
+    WAGTAILADMIN_RICH_TEXT_EDITORS["custom"] = {
+        "WIDGET": "wagtail.test.testapp.rich_text.CustomRichTextArea"
+    }
+else:  # pragma: no cover
+    WAGTAIL_APPS += (
+        "wagtail.core",
+        "wagtail.tests.testapp",
+    )
+    WAGTAILADMIN_RICH_TEXT_EDITORS["custom"] = {
+        "WIDGET": "wagtail.tests.testapp.rich_text.CustomRichTextArea"
+    }
 
 MIDDLEWARE = (
     "django.middleware.common.CommonMiddleware",
