@@ -1,7 +1,7 @@
 # Wagtail-Flags
 
 [![Build Status](https://github.com/cfpb/wagtail-flags/workflows/test/badge.svg)](https://github.com/cfpb/wagtail-flags/actions?query=workflow%3Atest)
-[![Coverage Status](https://coveralls.io/repos/github/cfpb/wagtail-flags/badge.svg?branch=master)](https://coveralls.io/github/cfpb/wagtail-flags?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/cfpb/wagtail-flags/badge.svg?branch=main)](https://coveralls.io/github/cfpb/wagtail-flags?branch=main)
 [![Ethical open source](https://img.shields.io/badge/open-ethical-%234baaaa)](https://ethicalsource.dev/definition/)
 
 Feature flags allow you to toggle functionality based on configurable conditions.
