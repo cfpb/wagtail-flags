@@ -1,6 +1,55 @@
+[project]
+name = "wagtail-flags"
+version = "5.3.0"
+description = "Feature flags for Wagtail sites"
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "CC0"}
+authors = [
+    {name = "CFPB", email = "tech@cfpb.gov" }
+]
+dependencies = [
+    "wagtail>2.15,<4",
+    "django-flags>4.2"
+]
+classifiers = [
+    "Framework :: Django",
+    "Framework :: Django :: 3.2",
+    "Framework :: Django :: 4",
+    "Framework :: Wagtail",
+    "Framework :: Wagtail :: 2",
+    "Framework :: Wagtail :: 3",
+    "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
+    "License :: Public Domain",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+]
+
+[project.optional-dependencies]
+testing = [
+    "coverage[toml]",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/cfpb/wagtail-flags"
+"Bug Reports" = "https://github.com/cfpb/wagtail-flags/issues"
+"Source" = "https://github.com/cfpb/wagtail-flags"
+
+[build-system]
+requires = ["setuptools>=43.0.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.package-data]
+wagtailflags = [
+    "templates/wagtailflags/*",
+    "templates/wagtailflags/flags/*",
+    "templates/wagtailflags/includes/*",
+    "static/wagtailflags/css/*",
+]
+
 [tool.black]
 line-length = 79
-target-version = ['py36', 'py38']
+target-version = ["py38"]
 include = '\.pyi?$'
 exclude = '''
 (
@@ -14,15 +63,41 @@ exclude = '''
     | dist
     | migrations
     | site
-    | \*.json
-    | \*.csv
   )/
 )
 '''
 
-[build-system]
-requires = [
-    "setuptools>=42",
-    "wheel"
+[tool.isort]
+profile = "black"
+line_length = 79
+lines_after_imports = 2
+skip = [".tox", ".venv", "venv"]
+known_django = ["django"]
+known_wagtail = ["wagtail"]
+default_section = "THIRDPARTY"
+sections = [
+    "STDLIB",
+    "DJANGO",
+    "WAGTAIL",
+    "THIRDPARTY",
+    "FIRSTPARTY",
+    "LOCALFOLDER"
 ]
-build-backend = "setuptools.build_meta"
+
+[tool.ruff]
+exclude = [
+    ".git",
+    ".tox",
+    "__pycache__",
+]
+ignore = []
+select = [
+    "E",
+    "F",
+    "W",
+]
+
+[tool.coverage.run]
+omit = [
+    "wagtailflags/tests/*",
+]
