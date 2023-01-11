@@ -3,9 +3,12 @@ import os
 import wagtail
 
 
+DEBUG = True
+
 ALLOWED_HOSTS = ["*"]
 
 USE_TZ = True
+
 SECRET_KEY = "not needed"
 
 ROOT_URLCONF = "wagtailflags.tests.urls"
@@ -23,12 +26,6 @@ DATABASES = {
     },
 }
 
-INSTALLED_APPS = (
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-)
-
 WAGTAIL_APPS = (
     "wagtail.contrib.forms",
     "wagtail.contrib.modeladmin",
@@ -36,13 +33,10 @@ WAGTAIL_APPS = (
     "wagtail.admin",
     "wagtail.documents",
     "wagtail.images",
+    "wagtail.snippets",
     "wagtail.sites",
     "wagtail.users",
 )
-
-WAGTAILADMIN_RICH_TEXT_EDITORS = {
-    "default": {"WIDGET": "wagtail.admin.rich_text.DraftailRichTextArea"},
-}
 
 # Wagtail 3.0 moves testapp from wagtail.tests to wagtail.test
 if wagtail.VERSION >= (3, 0, 0):  # pragma: no cover
@@ -50,17 +44,25 @@ if wagtail.VERSION >= (3, 0, 0):  # pragma: no cover
         "wagtail",
         "wagtail.test.testapp",
     )
-    WAGTAILADMIN_RICH_TEXT_EDITORS["custom"] = {
-        "WIDGET": "wagtail.test.testapp.rich_text.CustomRichTextArea"
+    WAGTAILADMIN_RICH_TEXT_EDITORS = {
+        "default": {"WIDGET": "wagtail.admin.rich_text.DraftailRichTextArea"},
+        "custom": {
+            "WIDGET": "wagtail.test.testapp.rich_text.CustomRichTextArea"
+        },
     }
 else:  # pragma: no cover
     WAGTAIL_APPS += (
         "wagtail.core",
         "wagtail.tests.testapp",
     )
-    WAGTAILADMIN_RICH_TEXT_EDITORS["custom"] = {
-        "WIDGET": "wagtail.tests.testapp.rich_text.CustomRichTextArea"
+    WAGTAILADMIN_RICH_TEXT_EDITORS = {
+        "default": {"WIDGET": "wagtail.admin.rich_text.DraftailRichTextArea"},
+        "custom": {
+            "WIDGET": "wagtail.tests.testapp.rich_text.CustomRichTextArea"
+        },
     }
+
+WAGTAILADMIN_BASE_URL = "http://localhost:8000"
 
 MIDDLEWARE = (
     "django.middleware.common.CommonMiddleware",
@@ -70,6 +72,13 @@ MIDDLEWARE = (
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 )
+
+INSTALLED_APPS = (
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+)
+
 
 INSTALLED_APPS = (
     (
@@ -88,7 +97,6 @@ INSTALLED_APPS = (
     )
 )
 
-STATIC_ROOT = "/tmp/static/"
 STATIC_URL = "/static/"
 
 TEMPLATES = [
