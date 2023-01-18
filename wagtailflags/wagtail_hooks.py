@@ -21,7 +21,7 @@ def register_flags_menu():
     return MenuItem(
         "Flags",
         reverse("wagtailflags:list"),
-        icon_name="tag",
+        icon_name="flag",
         order=10000,
     )
 
@@ -80,3 +80,8 @@ def global_admin_css():
         '<link rel="stylesheet" href="{}">',
         static("wagtailflags/css/wagtailflags.css"),
     )
+
+
+@hooks.register("register_icons")
+def register_icons(icons):
+    return icons + ["wagtailflags/flag.svg"]
