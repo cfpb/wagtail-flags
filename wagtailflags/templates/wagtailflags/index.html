@@ -6,8 +6,8 @@
 {% block content %}
     {% trans "Flags" as flags_str %}
     {% trans "Add a flag" as add_a_flag_str %}
-
-    {% include "wagtailflags/includes/header.html" with title=flags_str icon="tag" %}
+    {% url 'wagtailflags:create_flag' as add_link %}
+    {% include "wagtailadmin/shared/header.html" with title=flags_str action_icon=icon action_text=add_a_flag_str action_url=add_link icon="flag" %}
 
     <div class="nice-padding">
         {% if flags|length == 0 %}
