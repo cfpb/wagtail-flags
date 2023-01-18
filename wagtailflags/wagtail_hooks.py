@@ -8,10 +8,7 @@ from wagtail.admin.menu import MenuItem
 from wagtailflags import views
 
 
-if wagtail.VERSION >= (3, 0, 0):  # pragma: no cover
-    from wagtail import hooks
-else:  # pragma: no cover
-    from wagtail.core import hooks
+from wagtail import hooks
 
 from django.urls import include, re_path, reverse
 

@@ -9,10 +9,7 @@ from flags.models import FlagState
 from wagtailflags.signals import flag_disabled, flag_enabled
 
 
-if wagtail.VERSION >= (3, 0, 0):  # pragma: no cover
-    from wagtail.test.utils import WagtailTestUtils
-else:  # pragma: no cover
-    from wagtail.tests.utils import WagtailTestUtils
+from wagtail.test.utils import WagtailTestUtils
 
 
 class SignalsTestCase(TestCase, WagtailTestUtils):

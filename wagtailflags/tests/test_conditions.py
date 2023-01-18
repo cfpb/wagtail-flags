@@ -7,10 +7,7 @@ from flags.conditions import RequiredForCondition
 from wagtailflags.conditions import site_condition
 
 
-if wagtail.VERSION > (3, 0, 0):  # pragma: no cover
-    from wagtail.models import Site
-else:  # pragma: no cover
-    from wagtail.core.models import Site
+from wagtail.models import Site
 
 
 class SiteConditionTestCase(TestCase):
