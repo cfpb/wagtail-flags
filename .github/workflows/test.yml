@@ -32,23 +32,20 @@ jobs:
     strategy:
       matrix:
         toxenv:
-          # Legacy versions
-          - py38-dj32-wag215
-
-          # Current and latest versions
-          - py311-dj32-wag30
-          - py311-dj40-wag30
-          - py311-dj40-waglatest
+            - py38-dj3-wag4
+            - py38-dj4-wag4
+            - py38-dj3-waglatest
+            - py38-dj4-waglatest
 
         include:
-          - toxenv: py38-dj32-wag215
-            python-version: "3.8"
-          - toxenv: py311-dj32-wag30
-            python-version: "3.11"
-          - toxenv: py311-dj40-wag30
-            python-version: "3.11"
-          - toxenv: py311-dj40-waglatest
-            python-version: "3.11"
+          - toxenv: py38-dj3-wag4
+            python-version: 3.8
+          - toxenv: py38-dj4-wag4
+            python-version: 3.8
+          - toxenv: py38-dj3-waglatest
+            python-version: 3.8
+          - toxenv: py38-dj4-waglatest
+            python-version: 3.8
 
     steps:
       - uses: actions/checkout@v3
