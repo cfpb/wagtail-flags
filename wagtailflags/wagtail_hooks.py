@@ -1,16 +1,12 @@
 import django
 from django.templatetags.static import static
+from django.urls import include, re_path, reverse
 from django.utils.html import format_html
 
-import wagtail
+from wagtail import hooks
 from wagtail.admin.menu import MenuItem
 
 from wagtailflags import views
-
-
-from wagtail import hooks
-
-from django.urls import include, re_path, reverse
 
 
 @hooks.register("register_settings_menu_item")

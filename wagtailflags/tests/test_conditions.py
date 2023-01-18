@@ -1,13 +1,10 @@
 from django.test import RequestFactory, TestCase
 
-import wagtail
+from wagtail.models import Site
 
 from flags.conditions import RequiredForCondition
 
 from wagtailflags.conditions import site_condition
-
-
-from wagtail.models import Site
 
 
 class SiteConditionTestCase(TestCase):

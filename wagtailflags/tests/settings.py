@@ -1,7 +1,5 @@
 import os
 
-import wagtail
-
 
 DEBUG = True
 
@@ -38,29 +36,14 @@ WAGTAIL_APPS = (
     "wagtail.users",
 )
 
-# Wagtail 3.0 moves testapp from wagtail.tests to wagtail.test
-if wagtail.VERSION >= (3, 0, 0):  # pragma: no cover
-    WAGTAIL_APPS += (
-        "wagtail",
-        "wagtail.test.testapp",
-    )
-    WAGTAILADMIN_RICH_TEXT_EDITORS = {
-        "default": {"WIDGET": "wagtail.admin.rich_text.DraftailRichTextArea"},
-        "custom": {
-            "WIDGET": "wagtail.test.testapp.rich_text.CustomRichTextArea"
-        },
-    }
-else:  # pragma: no cover
-    WAGTAIL_APPS += (
-        "wagtail.core",
-        "wagtail.tests.testapp",
-    )
-    WAGTAILADMIN_RICH_TEXT_EDITORS = {
-        "default": {"WIDGET": "wagtail.admin.rich_text.DraftailRichTextArea"},
-        "custom": {
-            "WIDGET": "wagtail.tests.testapp.rich_text.CustomRichTextArea"
-        },
-    }
+WAGTAIL_APPS += (
+    "wagtail",
+    "wagtail.test.testapp",
+)
+WAGTAILADMIN_RICH_TEXT_EDITORS = {
+    "default": {"WIDGET": "wagtail.admin.rich_text.DraftailRichTextArea"},
+    "custom": {"WIDGET": "wagtail.test.testapp.rich_text.CustomRichTextArea"},
+}
 
 WAGTAILADMIN_BASE_URL = "http://localhost:8000"
 

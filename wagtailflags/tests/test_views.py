@@ -1,11 +1,8 @@
 from django.test import TestCase
 
-import wagtail
+from wagtail.test.utils import WagtailTestUtils
 
 from flags.models import FlagState
-
-
-from wagtail.test.utils import WagtailTestUtils
 
 
 class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
