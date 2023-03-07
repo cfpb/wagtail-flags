@@ -10,29 +10,8 @@
         {% csrf_token %}
         <ul class="fields">
             {% for field in form %}
-                <li {% if field.field.required %}class="required"{% endif %}>
-                    <div class="w-field__wrapper " data-field-wrapper="">
-                        <label class="w-field__label" for="id_text" id="id_text-label">
-                            {{ field.label }}<span class="w-required-mark">*</span>
-                        </label>
-                        <div class="w-field w-field--char_field w-field--text_input" data-field="" data-contentpath="text">
-                            <div class="w-field__errors" data-field-errors="">
-
-                            {% if field.errors %}
-                                <div class="help-block help-critical" style="margin-top:0;">
-                                    {{ field.errors }}
-                                </div>
-                            {% endif %}
-                            </div>
-                            <div class="w-field__input" data-field-input="">
-                                {{ field }}
-
-                            </div>
-                        </div>
-                    </div>
-                </li>
+                {% include "wagtailadmin/shared/field.html" with field=field %}
             {% endfor %}
-
             <li>
                 <input class="button action-save button-longrunning" type="submit" value="Save flag" />
                 <a class="button bicolor button--icon" href="{% url 'wagtailflags:list' %}">{% icon name="cog" wrapped=1 %} Back to flags</a>

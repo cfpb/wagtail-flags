@@ -13,34 +13,9 @@
     {% endif %}
         {% csrf_token %}
         <ul class="fields">
-
-            {% for field in form %}
-            <li {% if field.field.required %}class="required"{% endif %}>
-                    {% if not field.is_hidden %}
-
-                    <div class="w-field__wrapper " data-field-wrapper="">
-                        <label class="w-field__label" for="id_text" id="id_text-label">
-                            {{ field.label }}{% if field.field.required %}<span class="w-required-mark">*</span>{% endif %}
-                        </label>
-                        <div class="w-field w-field--char_field w-field--text_input" data-field="" data-contentpath="text">
-                            <div class="w-field__errors" data-field-errors="">
-
-                            {% if field.errors %}
-                                <div class="help-block help-critical" style="margin-top:0;">
-                                    {{ field.errors }}
-                                </div>
-                            {% endif %}
-                            </div>
-                            <div class="w-field__input" data-field-input="">
-                                {{ field }}
-                            </div>
-                        </div>
-                    </div>
-                    {% else %}
-                        {{ field }}
-                    {% endif %}
-                </li>
-            {% endfor %}
+            {% include "wagtailadmin/shared/field.html" with field=form.condition %}
+            {% include "wagtailadmin/shared/field.html" with field=form.value %}
+            {% include "wagtailadmin/shared/field.html" with field=form.required %}
 
             <li>
                 <input class="button action-save button-longrunning" type="submit" value="Save condition" />
