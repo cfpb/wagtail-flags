@@ -110,8 +110,10 @@ def edit_condition(request, name, condition_pk=None):
 
     try:
         condition = FlagState.objects.get(pk=condition_pk)
+        title_str = f"Edit {condition} condition"
     except FlagState.DoesNotExist:
         condition = None
+        title_str = f"Create a condition on {flag.name}"
 
     if request.method == "POST":
         form = FlagStateForm(
@@ -129,6 +131,7 @@ def edit_condition(request, name, condition_pk=None):
         "form": form,
         "condition_str": str(condition),
         "condition_pk": condition_pk,
+        "title": title_str,
     }
     return render(request, "wagtailflags/flags/edit_condition.html", context)
 

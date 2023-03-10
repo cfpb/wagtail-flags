@@ -1,13 +1,10 @@
 {% extends "wagtailadmin/base.html" %}
 {% load i18n feature_flags wagtailadmin_tags %}
-{% block titletag %}{% if form.instance %}Edit {{ form.instance.condition }} condition{% else %}Create condition{% endif %}{% endblock %}
+
+{% block titletag %}{{ flag.name }}{% endblock %}
 
 {% block content %}
-    {% include "wagtailadmin/shared/header.html" with title=flag.name icon="tag" %}
-
-    <h2 class="nice-padding">
-        {% if form.instance %}Edit {{ form.instance.condition }}{% else %}Create condition{% endif %}
-    </h2>
+    {% include "wagtailadmin/shared/header.html" with title=flag.name icon="flag" %}
 
     {% if condition_pk %}
     <form class="nice-padding" method="POST" action="{% url 'wagtailflags:edit_condition' flag.name condition_pk %}">
@@ -16,38 +13,13 @@
     {% endif %}
         {% csrf_token %}
         <ul class="fields">
+            {% include "wagtailadmin/shared/field.html" with field=form.condition %}
+            {% include "wagtailadmin/shared/field.html" with field=form.value %}
+            {% include "wagtailadmin/shared/field.html" with field=form.required %}
 
-            {% for field in form %}
-            <li {% if field.field.required %}class="required"{% endif %}>
-                    {% if not field.is_hidden %}
-                        <div class="field">
-                            {{ field.label_tag }}
-
-                            <div class="field-content">
-                                <div class="input">
-                                    {{ field }}
-                                </div>
-                                {% if field.help_text %}
-                                    <p class="help">{{ field.help_text|safe }}</p>
-                                {% endif %}
-                            </div>
-
-                            {% if field.errors %}
-                                <div class="help-block help-critical" style="margin-top:0;">
-                                    {{ field.errors }}
-                                </div>
-                            {% endif %}
-                        </div>
-                    {% else %}
-                        {{ field }}
-                    {% endif %}
-
-                </li>
-            {% endfor %}
-
-            <li class="actions">
+            <li>
                 <input class="button action-save button-longrunning" type="submit" value="Save condition" />
-                <a class="button bicolor button--icon" href="{% url 'wagtailflags:flag_index' flag.name %}">{% icon name="cog" wrapped=1 %} Back to {{ flag.name }}</a>
+                <a class="button no" href="{% url 'wagtailflags:flag_index' flag.name %}">Cancel</a>
             </li>
         </ul>
     </form>

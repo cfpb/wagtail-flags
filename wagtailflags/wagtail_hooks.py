@@ -1,19 +1,12 @@
 import django
 from django.templatetags.static import static
+from django.urls import include, re_path, reverse
 from django.utils.html import format_html
 
-import wagtail
+from wagtail import hooks
 from wagtail.admin.menu import MenuItem
 
 from wagtailflags import views
-
-
-if wagtail.VERSION >= (3, 0, 0):  # pragma: no cover
-    from wagtail import hooks
-else:  # pragma: no cover
-    from wagtail.core import hooks
-
-from django.urls import include, re_path, reverse
 
 
 @hooks.register("register_settings_menu_item")
@@ -21,7 +14,7 @@ def register_flags_menu():
     return MenuItem(
         "Flags",
         reverse("wagtailflags:list"),
-        icon_name="tag",
+        icon_name="flag",
         order=10000,
     )
 
@@ -80,3 +73,8 @@ def global_admin_css():
         '<link rel="stylesheet" href="{}">',
         static("wagtailflags/css/wagtailflags.css"),
     )
+
+
+@hooks.register("register_icons")
+def register_icons(icons):
+    return icons + ["wagtailflags/flag.svg"]

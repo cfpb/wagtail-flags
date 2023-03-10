@@ -1,0 +1,12 @@
+{% extends 'wagtailadmin/shared/header.html' %}
+{% load i18n wagtailadmin_tags wagtailflags_admin %}
+
+{% block right_column%}
+    {% if flag|deletable %}
+        {% url 'wagtailflags:delete_flag' flag.name as delete_link %}
+
+        <div class="actionbutton">
+            <a href="{{ delete_link }}" class="button no"> Delete {{title}}</a>
+        </div>
+    {% endif %}
+{% endblock %}

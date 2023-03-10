@@ -3,33 +3,16 @@
 {% block titletag %}Create a flag{% endblock %}
 
 {% block content %}
-    {% include "wagtailadmin/shared/header.html" with title=flag.name icon="tag" %}
-
-    <h2 class="nice-padding">
-        Create a flag
-    </h2>
+    {% trans "Create a flag" as create_flags_str %}
+    {% include "wagtailadmin/shared/header.html" with title=create_flags_str icon="flag" %}
 
     <form class="nice-padding" method="POST" action="{% url 'wagtailflags:create_flag' %}">
         {% csrf_token %}
         <ul class="fields">
-            <li class="actions">
-                {% for field in form %}
-                    {% if field.errors %}
-                        <div class="help-block help-critical" style="margin-top:0;">
-                            {{ field.errors }}
-                        </div>
-                    {% endif %}
-                    <label>{{ field.label }}</label>
-                    <div class="field-content">
-                        <div class="input">
-                            {{ field }}
-                            <span></span>
-                        </div>
-                        <p class="help"></p>
-                    </div>
-                {% endfor %}
-            </li>
-            <li class="actions">
+            {% for field in form %}
+                {% include "wagtailadmin/shared/field.html" with field=field %}
+            {% endfor %}
+            <li>
                 <input class="button action-save button-longrunning" type="submit" value="Save flag" />
                 <a class="button bicolor button--icon" href="{% url 'wagtailflags:list' %}">{% icon name="cog" wrapped=1 %} Back to flags</a>
             </li>
