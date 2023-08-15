@@ -24,27 +24,6 @@ DATABASES = {
     },
 }
 
-WAGTAIL_APPS = (
-    "wagtail.contrib.forms",
-    "wagtail.contrib.modeladmin",
-    "wagtail.contrib.settings",
-    "wagtail.admin",
-    "wagtail.documents",
-    "wagtail.images",
-    "wagtail.snippets",
-    "wagtail.sites",
-    "wagtail.users",
-)
-
-WAGTAIL_APPS += (
-    "wagtail",
-    "wagtail.test.testapp",
-)
-WAGTAILADMIN_RICH_TEXT_EDITORS = {
-    "default": {"WIDGET": "wagtail.admin.rich_text.DraftailRichTextArea"},
-    "custom": {"WIDGET": "wagtail.test.testapp.rich_text.CustomRichTextArea"},
-}
-
 WAGTAILADMIN_BASE_URL = "http://localhost:8000"
 
 MIDDLEWARE = (
@@ -57,27 +36,25 @@ MIDDLEWARE = (
 )
 
 INSTALLED_APPS = (
+    "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
+    "django.contrib.messages",
     "django.contrib.sessions",
-)
-
-
-INSTALLED_APPS = (
-    (
-        "django.contrib.admin",
-        "django.contrib.auth",
-        "django.contrib.contenttypes",
-        "django.contrib.messages",
-        "django.contrib.sessions",
-        "django.contrib.staticfiles",
-        "taggit",
-    )
-    + WAGTAIL_APPS
-    + (
-        "flags",
-        "wagtailflags",
-    )
+    "django.contrib.staticfiles",
+    "taggit",
+    "wagtail",
+    "wagtail.contrib.forms",
+    "wagtail.contrib.modeladmin",
+    "wagtail.contrib.settings",
+    "wagtail.admin",
+    "wagtail.documents",
+    "wagtail.images",
+    "wagtail.snippets",
+    "wagtail.sites",
+    "wagtail.users",
+    "flags",
+    "wagtailflags",
 )
 
 STATIC_URL = "/static/"
