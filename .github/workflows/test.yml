@@ -8,12 +8,12 @@ jobs:
     name: lint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: "3.8"
+          python-version: "3.12"
 
       - name: Install dependencies
         run: |
@@ -31,29 +31,24 @@ jobs:
 
     strategy:
       matrix:
-        toxenv:
-            - py38-dj3-wag4
-            - py38-dj4-wag4
-            - py38-dj3-waglatest
-            - py38-dj4-waglatest
-
+        python: ['3.12']
+        django: ['4.2', '5.0']
+        wagtail: ['6.0', '6.1']
         include:
-          - toxenv: py38-dj3-wag4
-            python-version: 3.8
-          - toxenv: py38-dj4-wag4
-            python-version: 3.8
-          - toxenv: py38-dj3-waglatest
-            python-version: 3.8
-          - toxenv: py38-dj4-waglatest
-            python-version: 3.8
+          - python: '3.8'
+            django: '4.2'
+            wagtail: '6.0'
+          - python: '3.8'
+            django: '4.2'
+            wagtail: '6.1'
 
     steps:
       - uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
-          python-version: ${{ matrix.python-version }}
+          python-version: ${{ matrix.python}}
 
       - name: Install dependencies
         run: |
@@ -61,15 +56,15 @@ jobs:
           pip install tox coveralls
 
       - name: Run tox
-        run: |
-            tox
+        run: tox
         env:
-          TOXENV: ${{ matrix.toxenv }}
+          TOXENV: python${{ matrix.python }}-django${{ matrix.django }}-wagtail${{ matrix.wagtail }}
+
 
       - name: Store test coverage
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v4
         with:
-          name: coverage
+          name: coverage-${{ matrix.python }}-${{ matrix.django }}-${{ matrix.wagtail }}
           path: .coverage.*
 
   coverage:
@@ -79,23 +74,24 @@ jobs:
       - test
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: "3.8"
+          python-version: "3.12"
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install tox
+
       - name: Retrieve test coverage
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
-          name: coverage
+          merge-multiple: true
 
       - name: Check coverage
         run: tox -e coverage

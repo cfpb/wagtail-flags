@@ -1,6 +1,10 @@
+[build-system]
+requires = ["setuptools>=63", "setuptools_scm[toml]>=8"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "wagtail-flags"
-version = "5.3.1"
+dynamic = ["version"]
 description = "Feature flags for Wagtail sites"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -9,19 +13,15 @@ authors = [
     {name = "CFPB", email = "tech@cfpb.gov" }
 ]
 dependencies = [
-    "wagtail>=4",
-    "django-flags>4.2"
+    "wagtail>6",
+    "django-flags>5"
 ]
 classifiers = [
     "Framework :: Django",
-    "Framework :: Django :: 3.2",
-    "Framework :: Django :: 4",
     "Framework :: Wagtail",
-    "Framework :: Wagtail :: 4",
     "License :: CC0 1.0 Universal (CC0 1.0) Public Domain Dedication",
     "License :: Public Domain",
     "Programming Language :: Python",
-    "Programming Language :: Python :: 3",
 ]
 
 [project.optional-dependencies]
@@ -34,10 +34,6 @@ testing = [
 "Bug Reports" = "https://github.com/cfpb/wagtail-flags/issues"
 "Source" = "https://github.com/cfpb/wagtail-flags"
 
-[build-system]
-requires = ["setuptools>=43.0.0", "wheel"]
-build-backend = "setuptools.build_meta"
-
 [tool.setuptools.package-data]
 wagtailflags = [
     "templates/wagtailflags/*",
@@ -46,57 +42,60 @@ wagtailflags = [
     "static/wagtailflags/css/*",
 ]
 
-[tool.black]
-line-length = 79
-target-version = ["py38"]
-include = '\.pyi?$'
-exclude = '''
-(
-  /(
-      \.eggs
-    | \.git
-    | \.tox
-    | \*.egg-info
-    | _build
-    | build
-    | dist
-    | migrations
-    | site
-  )/
-)
-'''
-
-[tool.isort]
-profile = "black"
-line_length = 79
-lines_after_imports = 2
-skip = [".tox", ".venv", "venv"]
-known_django = ["django"]
-known_wagtail = ["wagtail"]
-default_section = "THIRDPARTY"
-sections = [
-    "STDLIB",
-    "DJANGO",
-    "WAGTAIL",
-    "THIRDPARTY",
-    "FIRSTPARTY",
-    "LOCALFOLDER"
-]
+[tool.setuptools_scm]
 
 [tool.ruff]
+# Use PEP8 line-length
+line-length = 79
+# Exclude common paths
 exclude = [
     ".git",
     ".tox",
     "__pycache__",
+    "**/migrations/*.py",
 ]
-ignore = []
+
+[tool.ruff.lint]
+ignore = ["E731", ]
+# Select specific rulesets to use
 select = [
+    # pycodestyle
     "E",
+    # pyflakes
     "F",
-    "W",
+    # flake8-bugbear
+    "B",
+    # pyupgrade
+    "UP",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]
+
+[tool.ruff.lint.isort.sections]
+"django" = ["django"]
+"wagtail" = ["wagtail"]
+
+[tool.ruff.lint.isort]
+lines-after-imports = 2
+known-third-party = ["jinja2"]
+section-order = [
+    "future",
+    "standard-library",
+    "django",
+    "wagtail",
+    "third-party",
+    "first-party",
+    "local-folder",
 ]
 
 [tool.coverage.run]
 omit = [
     "wagtailflags/tests/*",
+]
+
+[tool.bandit]
+exclude_dirs = [
+    "*/tests/*",
 ]

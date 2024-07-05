@@ -11,13 +11,11 @@ class NewFlagForm(forms.ModelForm):
     def clean_name(self):
         name = self.cleaned_data["name"]
         if name in get_flags():
-            raise forms.ValidationError(
-                "Flag named {} already exists".format(name)
-            )
+            raise forms.ValidationError(f"Flag named {name} already exists")
         return name
 
     def save(self, commit=True):
-        obj = super(NewFlagForm, self).save(commit=False)
+        obj = super().save(commit=False)
         obj.condition = "boolean"
         obj.value = "False"
         obj.required = False

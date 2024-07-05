@@ -45,7 +45,6 @@ INSTALLED_APPS = (
     "taggit",
     "wagtail",
     "wagtail.contrib.forms",
-    "wagtail.contrib.modeladmin",
     "wagtail.contrib.settings",
     "wagtail.admin",
     "wagtail.documents",

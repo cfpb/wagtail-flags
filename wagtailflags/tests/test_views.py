@@ -161,7 +161,7 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
             name="DBONLY_FLAG", condition="boolean", value="true"
         )
         response = self.client.get(
-            "/admin/flags/DBONLY_FLAG/{}/".format(condition_obj.pk)
+            f"/admin/flags/DBONLY_FLAG/{condition_obj.pk}/"
         )
         self.assertEqual(response.status_code, 200)
 
@@ -171,7 +171,7 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
         }
 
         response = self.client.post(
-            "/admin/flags/DBONLY_FLAG/{}/".format(condition_obj.pk), params
+            f"/admin/flags/DBONLY_FLAG/{condition_obj.pk}/", params
         )
         self.assertRedirects(response, "/admin/flags/DBONLY_FLAG/")
         self.assertEqual(
@@ -190,12 +190,12 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
         )
         self.assertEqual(len(FlagState.objects.all()), 2)
         response = self.client.get(
-            "/admin/flags/DBONLY_FLAG/{}/delete/".format(condition_obj.pk)
+            f"/admin/flags/DBONLY_FLAG/{condition_obj.pk}/delete/"
         )
         self.assertEqual(response.status_code, 200)
 
         response = self.client.post(
-            "/admin/flags/DBONLY_FLAG/{}/delete/".format(condition_obj.pk)
+            f"/admin/flags/DBONLY_FLAG/{condition_obj.pk}/delete/"
         )
         self.assertRedirects(response, "/admin/flags/DBONLY_FLAG/")
         self.assertEqual(len(FlagState.objects.all()), 1)
