@@ -6,7 +6,7 @@ from flags.sources import get_flags
 
 
 class NewFlagForm(forms.ModelForm):
-    name = forms.CharField(label="Name", required=True)
+    name = forms.SlugField(label="Name", required=True)
 
     def clean_name(self):
         name = self.cleaned_data["name"]
