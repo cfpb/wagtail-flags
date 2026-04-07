@@ -21,10 +21,10 @@ Wagtail-Flags adds a Wagtail admin UI and Wagtail Site-based condition on top of
 
 ## Dependencies
 
-- Python 3.10+
-- Django 4.2 (LTS)+
+- Python 3.12+
+- Django 5.2 (LTS)+
 - Django-Flags 5.0
-- Wagtail 6.2+
+- Wagtail 6.3+
 
 It should be compatible at all intermediate versions, as well.
 If you find that it is not, please [file an issue](https://github.com/cfpb/wagtail-flags/issues/new).
@@ -40,13 +40,13 @@ pip install wagtail-flags
 
 2. Add `flags` and `wagtailflags` as installed apps in your Django `settings.py`:
 
- ```python
- INSTALLED_APPS = (
-     ...
-     'flags',
-     'wagtailflags',
-     ...
- )
+```python
+INSTALLED_APPS = (
+    ...
+    'flags',
+    'wagtailflags',
+    ...
+)
 ```
 
 ## Usage
@@ -107,7 +107,7 @@ FLAGS = {
 
 ## Signals
 
-Wagtail-Flags includes  `flag_enabled` and `flag_disabled` signals that can be received when the "Enable for all requests" and "Disable for all requests" buttons are pressed in the admin. This is intended to enable things like front-end cache invalidation.
+Wagtail-Flags includes `flag_enabled` and `flag_disabled` signals that can be received when the "Enable for all requests" and "Disable for all requests" buttons are pressed in the admin. This is intended to enable things like front-end cache invalidation.
 
 ```python
 from django.dispatch import receiver
@@ -139,6 +139,7 @@ Please add issues to the [issue tracker](https://github.com/cfpb/wagtail-flags/i
 General instructions on _how_ to contribute can be found in [CONTRIBUTING](CONTRIBUTING.md).
 
 ## Licensing
+
 1. [TERMS](TERMS.md)
 2. [LICENSE](LICENSE)
 3. [CFPB Source Code Policy](https://github.com/cfpb/source-code-policy/)

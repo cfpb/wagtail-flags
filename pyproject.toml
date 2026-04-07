@@ -7,7 +7,7 @@ name = "wagtail-flags"
 dynamic = ["version"]
 description = "Feature flags for Wagtail sites"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 license = "CC0-1.0"
 authors = [
     {name = "CFPB", email = "tech@cfpb.gov" }
@@ -18,15 +18,12 @@ dependencies = [
 ]
 classifiers = [
     "Framework :: Django",
-    "Framework :: Django :: 4.2",
-    "Framework :: Django :: 5.1",
     "Framework :: Django :: 5.2",
     "Framework :: Wagtail",
     "Framework :: Wagtail :: 6",
+    "Framework :: Wagtail :: 7",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
