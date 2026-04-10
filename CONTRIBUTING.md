@@ -61,4 +61,4 @@ To make a new release:
 1. Click "Publish release".
 1. Under https://github.com/cfpb/wagtail-flags/actions, you should see a "Publish to PyPI" action running - observe it to make sure it completes without error.
 
-If all worked correctly, you should see your new version at https://pypi.org/project/wagtail-flags/
+If all worked correctly, you should see your new version at https://pypi.org/project/wagtail-flags/.
