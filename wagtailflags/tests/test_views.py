@@ -152,6 +152,24 @@ class TestWagtailFlagsViews(TestCase, WagtailTestUtils):
         self.assertRedirects(response, "/admin/flags/DBONLY_FLAG/")
         self.assertEqual(len(FlagState.objects.all()), 2)
 
+    def test_create_flag_condition_form_excludes_boolean_choice(self):
+        response = self.client.get("/admin/flags/DBONLY_FLAG/create/")
+        self.assertEqual(response.status_code, 200)
+        self.assertNotContains(response, 'value="boolean"')
+
+    def test_create_flag_condition_rejects_boolean_choice(self):
+        response = self.client.post(
+            "/admin/flags/DBONLY_FLAG/create/",
+            {"condition": "boolean", "value": "true"},
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(
+            response,
+            "Boolean conditions are managed by the enable/disable button.",
+        )
+        self.assertEqual(len(FlagState.objects.all()), 1)
+
     def test_edit_flag_condition_nonexistent_flag_raises_404(self):
         response = self.client.get("/admin/flags/THIS_FLAG_DOES_NOT_EXIST/99/")
         self.assertEqual(response.status_code, 404)

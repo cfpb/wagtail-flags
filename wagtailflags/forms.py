@@ -35,6 +35,46 @@ class FlagStateForm(DjangoFlagsFlagStateForm):
         widget=forms.HiddenInput(),
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        condition_field = self.fields.get("condition")
+        if condition_field is None:
+            return
+
+        editing_boolean = (
+            self.instance is not None
+            and self.instance.pk is not None
+            and self.instance.condition == "boolean"
+        )
+        if not editing_boolean:
+            condition_field.widget.choices = [
+                choice
+                for choice in condition_field.choices
+                if choice[0] != "boolean"
+            ]
+
+    def clean_condition(self):
+        condition = self.cleaned_data["condition"]
+
+        editing_boolean = (
+            self.instance is not None
+            and self.instance.pk is not None
+            and self.instance.condition == "boolean"
+        )
+        if condition == "boolean" and not editing_boolean:
+            raise forms.ValidationError(
+                "Boolean conditions are managed by the enable/disable button."
+            )
+
+        return condition
+
+    def clean_value(self):
+        if self.cleaned_data.get("condition") is None:
+            return self.cleaned_data.get("value")
+
+        return super().clean_value()
+
     class Meta:
         model = FlagState
         fields = ("name", "condition", "value", "required")
