@@ -21,10 +21,10 @@ Wagtail-Flags adds a Wagtail admin UI and Wagtail Site-based condition on top of
 
 ## Dependencies
 
-- Python 3.12+
-- Django 5.2 (LTS)+
-- Django-Flags 5.0
-- Wagtail 6.3+
+- Python 3.13 – 3.14
+- Django  5.2 (LTS) – 6.0
+- Django-Flags 5.0+
+- Wagtail 7.0 (LTS) – 7.4 (LTS)
 
 It should be compatible at all intermediate versions, as well.
 If you find that it is not, please [file an issue](https://github.com/cfpb/wagtail-flags/issues/new).
@@ -56,9 +56,7 @@ Please see the [Django-Flags documentation](https://cfpb.github.io/django-flags)
 First, define the flag in Django `settings.py`:
 
 ```python
-FLAGS = {
-    'MY_FLAG': []
-}
+FLAGS = {"MY_FLAG": []}
 ```
 
 Then use the flag in a Django template (`mytemplate.html`):
@@ -81,7 +79,7 @@ from django.urls import path
 from django.views.generic import TemplateView
 
 urlpatterns = [
-    path(r'mypage/', TemplateView.as_view(template_name='mytemplate.html')),
+    path(r"mypage/", TemplateView.as_view(template_name="mytemplate.html")),
 ]
 ```
 
@@ -99,9 +97,7 @@ Allows a flag to be enabled for a Wagtail site that matches the hostname and por
 
 ```python
 FLAGS = {
-    'MY_FLAG': [
-        {'condition': 'site', 'value': 'staging.mysite.com'}
-    ],
+    "MY_FLAG": [{"condition": "site", "value": "staging.mysite.com"}],
 }
 ```
 
@@ -121,6 +117,7 @@ from wagtailflags.signals import flag_disabled, flag_enabled
 def purge_on_flag_enabled(sender, **kwargs):
     flag_name = kwargs["flag_name"]
     purge_url_from_cache(...)
+
 
 @receiver(flag_disabled)
 def purge_on_flag_disabled(sender, **kwargs):
