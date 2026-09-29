@@ -22,7 +22,7 @@ Wagtail-Flags adds a Wagtail admin UI and Wagtail Site-based condition on top of
 ## Dependencies
 
 - Python 3.13 – 3.14
-- Django  5.2 (LTS) – 6.0
+- Django 5.2 (LTS) – 6.0
 - Django-Flags 5.0+
 - Wagtail 7.0 (LTS) – 7.4 (LTS)
 
